@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space) && isGround && canJump)
         {
-            jumpValue += 0.1f;
+            jumpValue += 0.2f;
 
         }
 
