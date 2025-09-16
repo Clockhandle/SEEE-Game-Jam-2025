@@ -66,7 +66,9 @@ public class GunShoot : MonoBehaviour
         if (mainCamera == null) return;
 
         Vector3 mouseScreenPos = Input.mousePosition;
-        mouseScreenPos.z = mainCamera.nearClipPlane;
+        // mouseScreenPos.z = mainCamera.nearClipPlane;
+
+        mouseScreenPos.z = Mathf.Abs(mainCamera.transform.position.z);
         Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
 
         Vector2 mousePos2D = mouseWorldPos;

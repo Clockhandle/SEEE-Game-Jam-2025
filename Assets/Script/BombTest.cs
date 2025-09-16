@@ -17,6 +17,7 @@ public class BombTest : MonoBehaviour
         // Check if bomb hit a wall (based on your collision matrix)
         if (collision.gameObject.layer == LayerMask.NameToLayer("Wall") && !hasExploded)
         {
+            Debug.Log("Explode");
             Explode();
         }
     }
