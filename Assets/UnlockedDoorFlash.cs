@@ -1,29 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class UnlockedDoorFlash : MonoBehaviour
 {
+    public static event EventHandler OnDoorUnlocked;
+
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private float flashDuration;
 
-    private UnclockKey key;
+
+
 
     private void Awake()
     {
-        key = FindObjectOfType<UnclockKey>();   
+    
+      
     }
 
-    private void Start()
+  
+    private void FlashEffect()
     {
-        key.OnGetUnlockkey += FlashEffect;
-    }
-    public void FlashEffect(object sender, System.EventArgs e)
-    {
+        OnDoorUnlocked?.Invoke(this, EventArgs.Empty);
         StartCoroutine(FlashRoutine());
     }
 
-    public IEnumerator FlashRoutine()
+    private IEnumerator FlashRoutine()
     {
         for(int i = 0; i<= 3; i++)
         {
@@ -35,5 +38,17 @@ public class UnlockedDoorFlash : MonoBehaviour
         }
         Destroy(gameObject);
         
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Player player = collision.gameObject.GetComponent<Player>();    
+            if(player!= null && player.HasKey())
+            {
+                FlashEffect();
+            }
+        }
     }
 }

@@ -25,6 +25,8 @@ public class RecoilGunshoot : MonoBehaviour
     }
     void Update()
     {
+        if (player.IsDead()) return;
+
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
      
@@ -63,7 +65,7 @@ public class RecoilGunshoot : MonoBehaviour
         player.SetREcoil(false);
         player?.GetComponent<Rigidbody2D>().AddForce(-dir * recoilSpped, ForceMode2D.Impulse);
 
-        Invoke("DelaySetREcoil", 2f);
+        Invoke("DelaySetREcoil", 1f);  //Change to if touching ground then return to normal
         if (bullet.GetComponent<Collider2D>().IsTouchingLayers(LayerMask.GetMask("Ground")))
         {
             Destroy(bullet);

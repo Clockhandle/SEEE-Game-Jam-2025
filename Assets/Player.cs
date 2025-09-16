@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,14 +36,26 @@ public class Player : MonoBehaviour
 
     private float currentExplodeRaidus;
 
-    Collider2D[] hitobj;
+
 
     private bool isNotRecoiling;
+
+
+    [Header("KeyEvent")]
+    UnclockKey key;
+    private bool hasKey = false;
+
+    [Header("Death")]
+    bool isDead;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        key = FindObjectOfType<UnclockKey>();
         currentExplodeRaidus = startRadius;
         isNotRecoiling = true;
+
+        key.OnGetUnlockkey += Key_OnGetUnlockedKey;
     }
 
     public void SetGravityScale(float scale)
@@ -57,6 +70,9 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        if (isDead) return;
+
+
         moveInput = Input.GetAxisRaw("Horizontal");
 
         if (isNotRecoiling) 
@@ -108,6 +124,11 @@ public class Player : MonoBehaviour
 
     }
 
+    void Key_OnGetUnlockedKey(object sender, EventArgs e)
+    {
+        hasKey = true; 
+    }
+
     private void FixedBarUI()
     {
         // keep UI upright
@@ -137,7 +158,7 @@ public class Player : MonoBehaviour
     private void GravityManage()
     {
         // Jump gravity control
-        if (rb.velocity.y < 0)
+        if (rb.velocity.y < 0 && isNotRecoiling)
         {
             //Higher gravity if falling
             SetGravityScale(gravityScale * fallGravityMult);
@@ -162,6 +183,9 @@ public class Player : MonoBehaviour
         fillBar.fillAmount = jumpValue / 20f;
     }
 
+    
+    
+
     private void OnDrawGizmos()
     {
         Vector2 offset = new Vector2(gameObject.transform.position.x - 0.04290378f, gameObject.transform.position.y - 0.1225917f);
@@ -170,5 +194,14 @@ public class Player : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(offset, currentExplodeRaidus);
+    }
+
+    public bool HasKey() => hasKey;
+
+    public bool IsDead() => isDead;
+
+    public void SetDeath(bool value)
+    {
+        isDead = value;
     }
 }
