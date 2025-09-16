@@ -14,11 +14,12 @@ public class Bomb : MonoBehaviour
     {
         anim = GetComponent<Animator>();    
     }
-    private void Update()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (collision.CompareTag("RecoilBullet"))
         {
             Explode();
+            Destroy(gameObject, .2f);
         }
     }
 

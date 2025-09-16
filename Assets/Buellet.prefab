@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 6904751774093989541}
   - component: {fileID: -6185090566914914256}
   - component: {fileID: -3277684292796236897}
+  - component: {fileID: 3767876431330439986}
   m_Layer: 0
   m_Name: Buellet
-  m_TagString: Untagged
+  m_TagString: RecoilBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -148,3 +149,15 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &3767876431330439986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3659356493075300472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7897a0349a20c44cbd1b2691eb94a52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

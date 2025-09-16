@@ -47,15 +47,32 @@ public class RecoilGunshoot : MonoBehaviour
 
     void Shoot()
     {
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation); 
-        bullet.GetComponent<Rigidbody2D>().velocity =  transform.forward * bulletSpeed ;
+        
+        //GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation); 
+        //bullet.GetComponent<Rigidbody2D>().velocity = firePoint.up * bulletSpeed ;
 
-        player?.GetComponent<Rigidbody2D>().AddForce(-firePoint.forward * recoilSpped, ForceMode2D.Impulse);        
 
+        // Calculate shooting direction
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 parentPos = player.transform.position;
+        Vector2 dir = (mousePos - parentPos).normalized;
+
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        bullet.GetComponent<Rigidbody2D>().velocity = dir * bulletSpeed;
+
+        player.SetREcoil(false);
+        player?.GetComponent<Rigidbody2D>().AddForce(-dir * recoilSpped, ForceMode2D.Impulse);
+
+        Invoke("DelaySetREcoil", 2f);
         if (bullet.GetComponent<Collider2D>().IsTouchingLayers(LayerMask.GetMask("Ground")))
         {
             Destroy(bullet);
         }
+    }
+
+    void DelaySetREcoil()
+    {
+        player.SetREcoil(true);
     }
     
 }

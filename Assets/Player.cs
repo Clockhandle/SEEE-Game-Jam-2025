@@ -35,12 +35,14 @@ public class Player : MonoBehaviour
 
     private float currentExplodeRaidus;
 
-    Collider2D[] hitobj; 
+    Collider2D[] hitobj;
 
+    private bool isNotRecoiling;
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         currentExplodeRaidus = startRadius;
+        isNotRecoiling = true;
     }
 
     public void SetGravityScale(float scale)
@@ -48,10 +50,20 @@ public class Player : MonoBehaviour
         rb.gravityScale = scale;
     }
 
+    public void SetREcoil(bool value)
+    {
+        isNotRecoiling = value;
+    }
+
     private void Update()
     {
         moveInput = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(moveInput * walkSpeed, rb.velocity.y);
+
+        if (isNotRecoiling) 
+        {
+            rb.velocity = new Vector2(moveInput * walkSpeed, rb.velocity.y);
+        }
+
         if (moveInput != 0)
         {
             transform.Rotate(0, 0, -moveInput * rotateSpeed * Time.deltaTime);
