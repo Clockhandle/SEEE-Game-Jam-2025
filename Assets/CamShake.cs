@@ -5,8 +5,8 @@ public class CamShake : MonoBehaviour
     public static CamShake instance;
     public bool start = false;
     public float duration = 1f;
-    public AnimationCurve curve;
-
+    public AnimationCurve deathCurve;
+    public AnimationCurve explosionCurve;
 
     private void Awake()
     {
@@ -14,20 +14,20 @@ public class CamShake : MonoBehaviour
     }
     void Update()
     {
-        if (start)
-        {
-            start = false;  
-            StartCoroutine(ShakingCoroutine());
+        //if (start)
+        //{
+        //    start = false;  
+        //    StartCoroutine(ShakingCoroutine());
 
-        }
+        //}
     }
     
-    public void ShakeCam()
+    private void ShakeCam(float duration, AnimationCurve curve)
     {
-        start = true;  // active shking in update
+        StartCoroutine(ShakingCoroutine(duration, curve));
     }
 
-    private IEnumerator ShakingCoroutine()
+    private IEnumerator ShakingCoroutine(float duration, AnimationCurve curve)
     {
         Vector3 startPosition = transform.position;
         float elapsedTime = 0f;
@@ -42,4 +42,7 @@ public class CamShake : MonoBehaviour
 
         transform.position = startPosition;
     }
+
+    public void ShakeExplosion() => ShakeCam(1f, explosionCurve);
+    public void ShakeDeath() => ShakeCam(0.5f, deathCurve);
 }

@@ -1,10 +1,12 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public float walkSpeed;
+    [SerializeField] private float airControlForce = 5f;
     public float rotateSpeed;
     private float moveInput;
     public bool isGround;
@@ -36,26 +38,28 @@ public class Player : MonoBehaviour
 
     private float currentExplodeRaidus;
 
-
-
-    private bool isNotRecoiling;
-
-
     [Header("KeyEvent")]
     UnclockKey key;
+    UnlockDoorBomb unlockBomb;
     private bool hasKey = false;
+    private bool hasBomb = false;
 
     [Header("Death")]
     bool isDead;
+    public GameObject deathEffect;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         key = FindObjectOfType<UnclockKey>();
+        unlockBomb = FindObjectOfType<UnlockDoorBomb>();
+
         currentExplodeRaidus = startRadius;
-        isNotRecoiling = true;
+      
 
         key.OnGetUnlockkey += Key_OnGetUnlockedKey;
+        unlockBomb.OnGetUnlockBomb += Bomb_OnGetBomb;
+        DeathObj.OnDeath += DeathObj_OnPlayerDeath;
     }
 
     public void SetGravityScale(float scale)
@@ -63,10 +67,7 @@ public class Player : MonoBehaviour
         rb.gravityScale = scale;
     }
 
-    public void SetREcoil(bool value)
-    {
-        isNotRecoiling = value;
-    }
+ 
 
     private void Update()
     {
@@ -75,10 +76,9 @@ public class Player : MonoBehaviour
 
         moveInput = Input.GetAxisRaw("Horizontal");
 
-        if (isNotRecoiling) 
-        {
-            rb.velocity = new Vector2(moveInput * walkSpeed, rb.velocity.y);
-        }
+       
+        //rb.velocity = new Vector2(moveInput * walkSpeed, rb.velocity.y);
+        
 
         if (moveInput != 0)
         {
@@ -124,9 +124,33 @@ public class Player : MonoBehaviour
 
     }
 
+    [SerializeField]  private float maxSpeed = 8f;
+    [SerializeField] private float acceleration = 30f;
+
+    private void FixedUpdate()
+    {
+        if (isGround)
+        {
+            // Direct velocity control on ground (responsive)
+            rb.velocity = new Vector2(moveInput * walkSpeed, rb.velocity.y);
+        }
+        else
+        {
+            // Limited air drift (tiny acceleration)
+            rb.AddForce(new Vector2(moveInput * airControlForce, 0f));
+
+          
+        }
+    }
+
     void Key_OnGetUnlockedKey(object sender, EventArgs e)
     {
         hasKey = true; 
+    }
+
+    void Bomb_OnGetBomb(object sender, EventArgs e)
+    {
+        hasBomb = true; 
     }
 
     private void FixedBarUI()
@@ -158,7 +182,7 @@ public class Player : MonoBehaviour
     private void GravityManage()
     {
         // Jump gravity control
-        if (rb.velocity.y < 0 && isNotRecoiling)
+        if (rb.velocity.y < 0)
         {
             //Higher gravity if falling
             SetGravityScale(gravityScale * fallGravityMult);
@@ -183,8 +207,15 @@ public class Player : MonoBehaviour
         fillBar.fillAmount = jumpValue / 20f;
     }
 
-    
-    
+    void DeathObj_OnPlayerDeath(object sender, EventArgs e)
+    {
+        GameObject deathEffect = Instantiate(this.deathEffect, transform.position, Quaternion.identity);
+        Destroy(deathEffect, 1f);
+    }
+
+
+
+
 
     private void OnDrawGizmos()
     {
@@ -197,6 +228,7 @@ public class Player : MonoBehaviour
     }
 
     public bool HasKey() => hasKey;
+    public bool HasBomb() => hasBomb;
 
     public bool IsDead() => isDead;
 

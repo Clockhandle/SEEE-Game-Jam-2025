@@ -7,6 +7,7 @@ public class SteelDoor : MonoBehaviour
 {
     public static event EventHandler OnSteelDoorUnlocked;
 
+    public GameObject[] explodePrefabs;
 
     private void Start()
     {
@@ -16,8 +17,9 @@ public class SteelDoor : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+          
             Player player = collision.gameObject.GetComponent<Player>();
-            if (player != null && player.HasKey())
+            if (player != null && player.HasBomb())
             {
                 OnSteelDoorUnlocked?.Invoke(this, EventArgs.Empty);
             }
@@ -27,6 +29,12 @@ public class SteelDoor : MonoBehaviour
  
     void UnlockedBomb_OnBombActive(object sender, EventArgs e)
     {
+        CamShake.instance.ShakeExplosion();
+        foreach(var obj in explodePrefabs)
+        {
+            GameObject explodePreb = Instantiate(obj, transform.position, Quaternion.identity);
+            Destroy(explodePreb, 1f);
+        }
         Destroy(gameObject);  // create particle and shit
     }
 }

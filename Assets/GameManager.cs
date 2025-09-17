@@ -58,6 +58,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void ReLoadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
 
 
 }

@@ -45,6 +45,9 @@ public class RecoilGunshoot : MonoBehaviour
         {
             Shoot();
         }   
+
+
+
     }   
 
     void Shoot()
@@ -62,19 +65,15 @@ public class RecoilGunshoot : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         bullet.GetComponent<Rigidbody2D>().velocity = dir * bulletSpeed;
 
-        player.SetREcoil(false);
-        player?.GetComponent<Rigidbody2D>().AddForce(-dir * recoilSpped, ForceMode2D.Impulse);
 
-        Invoke("DelaySetREcoil", 1f);  //Change to if touching ground then return to normal
+        player?.GetComponent<Rigidbody2D>().AddForce(-dir * recoilSpped, ForceMode2D.Impulse);
+    
+
         if (bullet.GetComponent<Collider2D>().IsTouchingLayers(LayerMask.GetMask("Ground")))
         {
             Destroy(bullet);
         }
     }
 
-    void DelaySetREcoil()
-    {
-        player.SetREcoil(true);
-    }
     
 }

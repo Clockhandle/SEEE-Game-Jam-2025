@@ -15,7 +15,7 @@ public class DeathObj : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             //Active Cam Shake
-            CamShake.instance.ShakeCam();
+            CamShake.instance.ShakeDeath();
 
             Player player = collision.gameObject.GetComponent<Player>();
             player.SetDeath(true);
@@ -36,6 +36,7 @@ public class DeathObj : MonoBehaviour
 
             OnDeath?.Invoke(this, EventArgs.Empty);
 
+           // GameManager.Instance.ReLoadScene();
 
 
         }
