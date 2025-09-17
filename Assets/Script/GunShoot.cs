@@ -177,9 +177,26 @@ public class GunShoot : MonoBehaviour
         }
         else
         {
-            // Ray didn't hit anything within range
+            // Ray didn't hit anything within range - shoot a bomb instead
+            ShootBomb();
+            
+            // Show visual ray to max range
             Vector2 rayEnd = rayOrigin + rayDirection * raycastDistance;
             ShowRayVisual(rayOrigin, rayEnd);
+        }
+    }
+
+    private void ShootBomb()
+    {
+        if (bombPrefab == null) return;
+
+        GameObject bomb = Instantiate(bombPrefab, transform.position, transform.rotation);
+        
+        Rigidbody2D bombRb = bomb.GetComponent<Rigidbody2D>();
+        if (bombRb != null)
+        {
+            Vector2 shootDirection = transform.right;
+            bombRb.velocity = shootDirection * bombSpeed;
         }
     }
 
