@@ -13,6 +13,9 @@ public class PlayerTest : MonoBehaviour
     private InputAction moveAction;
     private float moveInput;
 
+    // Public property to check if player is giving movement input
+    public bool IsMoving => Mathf.Abs(moveInput) > 0.1f;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();

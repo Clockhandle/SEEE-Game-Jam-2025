@@ -902,6 +902,19 @@ MonoBehaviour:
   bombPrefab: {fileID: 5063264431685524522, guid: 996e5ff7bfe5b1a4b8f035413891f456, type: 3}
   bombSpeed: 10
   fireRate: 0.5
+  enableRaycast: 1
+  raycastDistance: 1.5
+  raycastTargets:
+    serializedVersion: 2
+    m_Bits: 128
+  lineRenderer: {fileID: 0}
+  rayVisibleTime: 0.1
+  maxPushForce: 20
+  minPushForce: 10
+  explosionEffect: {fileID: 0}
+  pushTargets:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &1786463208
 GameObject:
   m_ObjectHideFlags: 0
