@@ -17,11 +17,19 @@ public class Bomb : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Check if bomb hits Ground, Destroyable, or Wall layers
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground") || 
             collision.gameObject.layer == LayerMask.NameToLayer("Destroyable") ||
             collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
+            // STOP THE BOMB MOVEMENT
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.velocity = Vector2.zero;      // Stop all movement
+                rb.angularVelocity = 0f;         // Stop rotation
+                rb.isKinematic = true;           // Make it immovable
+            }
+            
             Explode();
             Destroy(gameObject, .3f);
         }
