@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
       
-        unlockButton = FindObjectOfType<UnlockLVButton>()?.GetComponent<Button>();
+        unlockButton = FindObjectOfType<UnlockLVButton>()?.GetComponentInChildren<Button>(true);
 
         if (unlockButton != null)
         {

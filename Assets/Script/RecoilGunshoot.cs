@@ -33,6 +33,8 @@ public class RecoilGunshoot : MonoBehaviour
     {
         if (player.IsDead()) return;
 
+        if(player.IsWin())  return; 
+
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
      

@@ -48,18 +48,30 @@ public class Player : MonoBehaviour
     bool isDead;
     public GameObject deathEffect;
 
+    [Header("Winning")]
+    bool isWinning = false;
+
+    private void Awake()
+    {
+        isWinning = false;
+    }
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         key = FindObjectOfType<UnclockKey>();
+
         unlockBomb = FindObjectOfType<UnlockDoorBomb>();
 
         currentExplodeRaidus = startRadius;
       
+        if(key!= null)
+            key.OnGetUnlockkey += Key_OnGetUnlockedKey;
+        if(unlockBomb!= null)
+            unlockBomb.OnGetUnlockBomb += Bomb_OnGetBomb;
 
-        key.OnGetUnlockkey += Key_OnGetUnlockedKey;
-        unlockBomb.OnGetUnlockBomb += Bomb_OnGetBomb;
         DeathObj.OnDeath += DeathObj_OnPlayerDeath;
+        WinFlagGoal.instance.OnTriggerWinFlag += WinFlag_OnWinning;
     }
 
     public void SetGravityScale(float scale)
@@ -73,6 +85,7 @@ public class Player : MonoBehaviour
     {
         if (isDead) return;
 
+        if (isWinning) return;
 
         moveInput = Input.GetAxisRaw("Horizontal");
 
@@ -213,6 +226,11 @@ public class Player : MonoBehaviour
         Destroy(deathEffect, 1f);
     }
 
+    void WinFlag_OnWinning(object sender, EventArgs e)
+    {
+        isWinning = true;
+    }
+
 
 
 
@@ -232,8 +250,12 @@ public class Player : MonoBehaviour
 
     public bool IsDead() => isDead;
 
+    public bool IsWin() => isWinning;
+
     public void SetDeath(bool value)
     {
         isDead = value;
     }
+
+
 }
