@@ -2,9 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UnlockLVButton : MonoBehaviour
 {
+
+    private void OnEnable()
+    {
+        
+    }
 
     public void OpenSelectionLevel()
     {
@@ -14,8 +20,9 @@ public class UnlockLVButton : MonoBehaviour
 
     private IEnumerator DelayTransition()
     {
-        //yield return new WaitForSeconds(2f);
-        yield return null;
+        WhiteFlash.instance.ActiveFlashScreen();
+        yield return new WaitForSeconds(1f);
+        //yield return null;
         string levelName = "LevelSelect";
         SceneManager.LoadScene(levelName);
     }

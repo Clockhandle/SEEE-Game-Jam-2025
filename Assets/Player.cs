@@ -1,9 +1,12 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public float walkSpeed;
+    [SerializeField] private float airControlForce = 5f;
     public float rotateSpeed;
     private float moveInput;
     public bool isGround;
@@ -35,12 +38,40 @@ public class Player : MonoBehaviour
 
     private float currentExplodeRaidus;
 
-    Collider2D[] hitobj; 
+    [Header("KeyEvent")]
+    UnclockKey key;
+    UnlockDoorBomb unlockBomb;
+    private bool hasKey = false;
+    private bool hasBomb = false;
+
+    [Header("Death")]
+    bool isDead;
+    public GameObject deathEffect;
+
+    [Header("Winning")]
+    bool isWinning = false;
+
+    private void Awake()
+    {
+        isWinning = false;
+    }
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        key = FindObjectOfType<UnclockKey>();
+
+        unlockBomb = FindObjectOfType<UnlockDoorBomb>();
+
         currentExplodeRaidus = startRadius;
+      
+        if(key!= null)
+            key.OnGetUnlockkey += Key_OnGetUnlockedKey;
+        if(unlockBomb!= null)
+            unlockBomb.OnGetUnlockBomb += Bomb_OnGetBomb;
+
+        DeathObj.OnDeath += DeathObj_OnPlayerDeath;
+        WinFlagGoal.instance.OnTriggerWinFlag += WinFlag_OnWinning;
     }
 
     public void SetGravityScale(float scale)
@@ -48,10 +79,20 @@ public class Player : MonoBehaviour
         rb.gravityScale = scale;
     }
 
+ 
+
     private void Update()
     {
+        if (isDead) return;
+
+        if (isWinning) return;
+
         moveInput = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(moveInput * walkSpeed, rb.velocity.y);
+
+       
+        //rb.velocity = new Vector2(moveInput * walkSpeed, rb.velocity.y);
+        
+
         if (moveInput != 0)
         {
             transform.Rotate(0, 0, -moveInput * rotateSpeed * Time.deltaTime);
@@ -94,6 +135,35 @@ public class Player : MonoBehaviour
         ExpandExplodeRadius();
 
 
+    }
+
+    [SerializeField]  private float maxSpeed = 8f;
+    [SerializeField] private float acceleration = 30f;
+
+    private void FixedUpdate()
+    {
+        if (isGround)
+        {
+            // Direct velocity control on ground (responsive)
+            rb.velocity = new Vector2(moveInput * walkSpeed, rb.velocity.y);
+        }
+        else
+        {
+            // Limited air drift (tiny acceleration)
+            rb.AddForce(new Vector2(moveInput * airControlForce, 0f));
+
+          
+        }
+    }
+
+    void Key_OnGetUnlockedKey(object sender, EventArgs e)
+    {
+        hasKey = true; 
+    }
+
+    void Bomb_OnGetBomb(object sender, EventArgs e)
+    {
+        hasBomb = true; 
     }
 
     private void FixedBarUI()
@@ -150,6 +220,21 @@ public class Player : MonoBehaviour
         fillBar.fillAmount = jumpValue / 20f;
     }
 
+    void DeathObj_OnPlayerDeath(object sender, EventArgs e)
+    {
+        GameObject deathEffect = Instantiate(this.deathEffect, transform.position, Quaternion.identity);
+        Destroy(deathEffect, 1f);
+    }
+
+    void WinFlag_OnWinning(object sender, EventArgs e)
+    {
+        isWinning = true;
+    }
+
+
+
+
+
     private void OnDrawGizmos()
     {
         Vector2 offset = new Vector2(gameObject.transform.position.x - 0.04290378f, gameObject.transform.position.y - 0.1225917f);
@@ -159,4 +244,18 @@ public class Player : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(offset, currentExplodeRaidus);
     }
+
+    public bool HasKey() => hasKey;
+    public bool HasBomb() => hasBomb;
+
+    public bool IsDead() => isDead;
+
+    public bool IsWin() => isWinning;
+
+    public void SetDeath(bool value)
+    {
+        isDead = value;
+    }
+
+
 }

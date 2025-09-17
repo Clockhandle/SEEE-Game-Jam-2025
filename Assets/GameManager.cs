@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
       
-        unlockButton = FindObjectOfType<UnlockLVButton>()?.GetComponent<Button>();
+        unlockButton = FindObjectOfType<UnlockLVButton>()?.GetComponentInChildren<Button>(true);
 
         if (unlockButton != null)
         {
@@ -56,6 +56,11 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("unlockedLevel", PlayerPrefs.GetInt("unlockedLevel", 1) + 1);
             PlayerPrefs.Save();
         }
+    }
+
+    public void ReLoadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
 

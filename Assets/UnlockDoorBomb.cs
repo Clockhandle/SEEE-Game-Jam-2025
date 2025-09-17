@@ -3,30 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnclockKey : MonoBehaviour
+public class UnlockDoorBomb : MonoBehaviour
 {
-
     private Transform player;
 
-    public event EventHandler OnGetUnlockkey;
+    public event EventHandler OnGetUnlockBomb;
+    public static event EventHandler OnBombExplode;
 
     public Transform followPoint;
     private bool canfollowPlayer = false;
+    private bool isAttachedToDoor = false;
 
     public float followSpeed = 5f;  // how fast it chases target
     public float smoothDamp = 0.3f;
 
     private Vector3 velocity;
+    private Transform doorTarget;
+
+    [Header("Flash")]
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private float flashDuration;
 
     private void OnEnable()
     {
         player = FindObjectOfType<Player>().GetComponent<Transform>();
-
-        UnlockedDoorFlash.OnDoorUnlocked += HandleDoorUnlocked;
-    }
-    private void OnDisable()
-    {
-        UnlockedDoorFlash.OnDoorUnlocked -= HandleDoorUnlocked;
+        doorTarget = FindObjectOfType<SteelDoor>().transform;   
+       SteelDoor.OnSteelDoorUnlocked += HandleDoorUnlocked;
     }
 
 
@@ -34,14 +36,14 @@ public class UnclockKey : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            if(player == null)
+            if (player == null)
             {
                 player = collision.transform;
-               
+
             }
             canfollowPlayer = true;
-            
-            OnGetUnlockkey?.Invoke(this, EventArgs.Empty);
+
+            OnGetUnlockBomb?.Invoke(this, EventArgs.Empty);
             //Destroy(gameObject, .2f);
 
         }
@@ -49,7 +51,15 @@ public class UnclockKey : MonoBehaviour
 
     void LateUpdate()
     {
-        if(canfollowPlayer && player != null)
+
+        if (isAttachedToDoor)
+        {
+            // Stick to door
+            transform.position = doorTarget.position;
+            return;
+        }
+
+        if (canfollowPlayer && player != null)
         {
             // target follow position (slightly behind player)
             Vector3 targetPos = followPoint.position;
@@ -70,6 +80,22 @@ public class UnclockKey : MonoBehaviour
 
     private void HandleDoorUnlocked(object sender, EventArgs e)
     {
-        Destroy(gameObject); 
+        isAttachedToDoor = true;
+        StartCoroutine(FlashRoutine());
+    }
+
+    private IEnumerator FlashRoutine()
+    {
+        for (int i = 0; i <= 4; i++)
+        {
+            spriteRenderer.material.SetInt("_Flash", 1);
+            yield return new WaitForSeconds(flashDuration);
+            spriteRenderer.material.SetInt("_Flash", 0);
+
+            yield return new WaitForSeconds(flashDuration);
+        }
+        OnBombExplode?.Invoke(this, EventArgs.Empty );  
+        Destroy(gameObject);
+
     }
 }
