@@ -25,6 +25,8 @@ public class GunShoot : MonoBehaviour
     [SerializeField] private float minPushForce = 100f; // Minimum push force when at max range
     [SerializeField] private GameObject explosionEffect; // Visual effect to spawn at wall
     [SerializeField] private LayerMask pushTargets = -1; // What can be pushed (should include Player layer)
+    [SerializeField] private bool neutralizeFallingVelocity = true; // Whether to stop downward velocity during rocket jump
+    [SerializeField] private float maxAllowedFallSpeed = -5f; // Maximum downward speed allowed during rocket jump (if neutralization is disabled)
 
     private Camera mainCamera;
     private Vector3 originalGunScale;
@@ -167,8 +169,6 @@ public class GunShoot : MonoBehaviour
 
         if (hit.collider != null)
         {
-            Debug.Log($"Ray hit: {hit.collider.name} on layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)} at distance: {hit.distance:F2}");
-            
             // Handle what happens when ray hits something
             HandleRaycastHit(hit);
             
@@ -180,7 +180,6 @@ public class GunShoot : MonoBehaviour
             // Ray didn't hit anything within range
             Vector2 rayEnd = rayOrigin + rayDirection * raycastDistance;
             ShowRayVisual(rayOrigin, rayEnd);
-            Debug.Log($"Ray didn't hit anything within {raycastDistance} units");
         }
     }
 
@@ -191,8 +190,6 @@ public class GunShoot : MonoBehaviour
         // Check if we hit a wall - trigger rocket jump
         if (hitLayer == LayerMask.NameToLayer("Wall"))
         {
-            Debug.Log("Wall layer hit by ray - triggering rocket jump!");
-            
             // Spawn explosion effect at wall hit point
             SpawnExplosionEffect(hit.point);
             
@@ -201,12 +198,7 @@ public class GunShoot : MonoBehaviour
         }
         else if (hitLayer == LayerMask.NameToLayer("Enemy"))
         {
-            Debug.Log("Enemy layer hit by ray!");
             // Deal damage to enemy
-        }
-        else
-        {
-            Debug.Log($"Hit object on layer: {LayerMask.LayerToName(hitLayer)}");
         }
     }
 
@@ -234,10 +226,32 @@ public class GunShoot : MonoBehaviour
         float normalizedDistance = Mathf.Clamp01(distanceToWall / raycastDistance);
         float pushForce = Mathf.Lerp(maxPushForce, minPushForce, normalizedDistance);
 
-        // Apply the force to player
+        // Handle falling velocity to make rocket jump more effective in mid-air
+        Vector2 currentVelocity = playerRb.velocity;
+        if (currentVelocity.y < 0) // Player is falling
+        {
+            if (neutralizeFallingVelocity)
+            {
+                // Completely stop downward velocity for maximum rocket jump effectiveness
+                playerRb.velocity = new Vector2(currentVelocity.x, 0f);
+            }
+            else
+            {
+                // Limit downward velocity to the configured maximum
+                float clampedY = Mathf.Max(currentVelocity.y, maxAllowedFallSpeed);
+                playerRb.velocity = new Vector2(currentVelocity.x, clampedY);
+            }
+        }
+
+        // Apply the rocket jump force
         playerRb.AddForce(pushDirection * pushForce, ForceMode2D.Impulse);
 
-        Debug.Log($"Rocket jump! Distance: {distanceToWall:F2}, Force: {pushForce:F0}, Direction: {pushDirection}");
+        // Notify PlayerTest about the rocket jump
+        PlayerTest playerTest = playerTransform.GetComponent<PlayerTest>();
+        if (playerTest != null)
+        {
+            playerTest.OnRocketJump();
+        }
     }
 
     private void UpdateRaycast()
