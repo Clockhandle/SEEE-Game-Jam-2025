@@ -12,12 +12,18 @@ public class RecoilGunshoot : MonoBehaviour
     [Header("Shoot")]
     public Transform firePoint;
     public GameObject bulletPrefab;
+    public GameObject bombPrefab;
     public float bulletSpeed;
+    public float bombSpeed;
 
 
     [Header("Recoil")]
     private Player player;
     public float recoilSpped;
+
+    //Hanlde switch bomb and gun
+    bool isRayReachGround;
+    [SerializeField] private float rayDistance = 2f;
 
     void Start()
     {
@@ -43,14 +49,34 @@ public class RecoilGunshoot : MonoBehaviour
 
         if(Input.GetMouseButtonDown(0))
         {
-            Shoot();
-        }   
+            if (isRayReachGround)
+            {
+            ShootBullet();
+
+            }
+            else
+            {
+                ShootBomb();
+            }
+        }
 
 
 
+
+        int mask = LayerMask.GetMask("Ground", "Destroyable");
+        RaycastHit2D ray = Physics2D.Raycast(firePoint.position, firePoint.up, rayDistance, mask);
+
+        if (ray.collider != null)
+        {
+            isRayReachGround = true;
+        }
+        else
+        {
+            isRayReachGround = false;
+        }
     }   
 
-    void Shoot()
+    void ShootBullet()
     {
         
         //GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation); 
@@ -75,5 +101,31 @@ public class RecoilGunshoot : MonoBehaviour
         }
     }
 
-    
+    void ShootBomb()
+    {
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 parentPos = player.transform.position;
+        Vector2 dir = (mousePos - parentPos).normalized;
+
+        GameObject bullet = Instantiate(bombPrefab, firePoint.position, firePoint.rotation);
+        bullet.GetComponent<Rigidbody2D>().velocity = dir * bombSpeed;
+    }
+
+    private void OnDrawGizmos()
+    {
+
+        int mask = LayerMask.GetMask("Ground", "Destroyableyy");
+        RaycastHit2D ray = Physics2D.Raycast(firePoint.position, firePoint.up, rayDistance, mask);
+
+        if (ray.collider != null)
+        {
+            Gizmos.DrawLine(firePoint.position, ray.point); // stop at hit
+        }
+        else
+        {
+            Gizmos.DrawLine(firePoint.position, firePoint.position + firePoint.up * rayDistance);
+        }
+    }
+
+
 }

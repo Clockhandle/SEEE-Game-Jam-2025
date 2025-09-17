@@ -7073,8 +7073,11 @@ MonoBehaviour:
   rotateSpeed: 6
   firePoint: {fileID: 297628742}
   bulletPrefab: {fileID: 3659356493075300472, guid: cbf2c3297ad0d8f48aa9d7e5e9c6abdb, type: 3}
+  bombPrefab: {fileID: 297400541649638553, guid: 71d7c8da2af6bf04fa47f0c4c0d0682e, type: 3}
   bulletSpeed: 100
+  bombSpeed: 20
   recoilSpped: 8
+  rayDistance: 2
 --- !u!212 &495270505
 SpriteRenderer:
   m_ObjectHideFlags: 0

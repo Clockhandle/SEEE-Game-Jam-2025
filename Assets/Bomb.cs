@@ -14,17 +14,28 @@ public class Bomb : MonoBehaviour
     {
         anim = GetComponent<Animator>();    
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.gameObject.layer == LayerMask.NameToLayer("Ground") || collision.gameObject.layer == LayerMask.NameToLayer("Destroyable"))
+    //    {
+    //        Explode();
+    //        Destroy(gameObject, .3f);
+    //    }
+    //}
+
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.CompareTag("RecoilBullet"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground") || collision.gameObject.layer == LayerMask.NameToLayer("Destroyable"))
         {
             Explode();
-            Destroy(gameObject, .2f);
+            Destroy(gameObject, .3f);
         }
+
     }
 
     private void Explode()
     {
+        anim.SetTrigger("Explode");
         Collider2D[] objects = Physics2D.OverlapCircleAll(transform.position, impactRange, impactLayer);
         foreach(Collider2D obj in objects)
         {
@@ -36,7 +47,6 @@ public class Bomb : MonoBehaviour
 
             obj.GetComponent<Rigidbody2D>().AddForce(direction * force * distanceFactor, ForceMode2D.Impulse);
         }
-        anim.SetTrigger("Explode");
 
     }
     private void OnDrawGizmos()
