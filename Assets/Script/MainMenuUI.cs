@@ -9,7 +9,9 @@ public class MainMenuUI : MonoBehaviour
     
     private void Awake()
     {
-        playButton.onClick.AddListener(() => ScreenWipe.TransitionToScene("LevelSelect"));
+        playButton.onClick.AddListener(() => {
+            ScreenWipe.TransitionToScene("LevelSelect");
+        });
         quitButton.onClick.AddListener(() => Application.Quit());
         Time.timeScale = 1f;
     }
