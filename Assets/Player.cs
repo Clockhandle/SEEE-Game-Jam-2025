@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    private Animator anim;
+
     public float walkSpeed;
     [SerializeField] private float airControlForce = 5f;
     public float rotateSpeed;
@@ -54,6 +56,9 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         isWinning = false;
+        anim = GetComponentInChildren<Animator>();
+
+       
     }
 
     private void Start()
@@ -72,6 +77,10 @@ public class Player : MonoBehaviour
 
         DeathObj.OnDeath += DeathObj_OnPlayerDeath;
         WinFlagGoal.instance.OnTriggerWinFlag += WinFlag_OnWinning;
+
+
+        rb.constraints = RigidbodyConstraints2D.None;  //unlcok all contraint
+
     }
 
     public void SetGravityScale(float scale)
@@ -168,9 +177,8 @@ public class Player : MonoBehaviour
 
     private void FixedBarUI()
     {
-        // keep UI upright
-        fillBar.transform.rotation = Quaternion.identity;
-        backGroundBar.transform.rotation = Quaternion.identity;
+        fillBar.transform.position = transform.position + new Vector3(0, 1.2f, 0);
+        backGroundBar.transform.position = transform.position + new Vector3(0, 1.2f, 0);
     }
 
     private void ExpandExplodeRadius()
@@ -229,6 +237,9 @@ public class Player : MonoBehaviour
     void WinFlag_OnWinning(object sender, EventArgs e)
     {
         isWinning = true;
+        transform.rotation = Quaternion.identity;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;  // remove contrain when start game
+        anim.SetTrigger("Win");
     }
 
 
