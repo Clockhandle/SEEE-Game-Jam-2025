@@ -8,7 +8,7 @@ public class BombTest : MonoBehaviour
     [SerializeField] private float explosionRadius = 3f;
     [SerializeField] private float explosionForce = 500f;
     [SerializeField] private LayerMask explosionTargets = -1; // What gets affected by explosion
-    [SerializeField] private GameObject explosionEffect; // Optional visual effect
+    [SerializeField] private GameObject[] explosionEffect; // Optional visual effect
 
     private bool hasExploded = false;
 
@@ -27,11 +27,26 @@ public class BombTest : MonoBehaviour
         hasExploded = true;
 
         // Create explosion effect
-        if (explosionEffect != null)
+        // if (explosionEffect != null)
+        // {
+        //     foreach (GameObject effect in explosionEffect)
+        //     {
+        //         if (effect != null)
+        //         {
+        //             Instantiate(effect, transform.position, Quaternion.identity);
+        //         }
+        //     }
+        // }
+        // Randomly select and instantiate one explosion effect
+        if (explosionEffect != null && explosionEffect.Length > 0)
         {
-            Instantiate(explosionEffect, transform.position, Quaternion.identity);
+            int randomIndex = Random.Range(0, explosionEffect.Length);
+            GameObject effect = explosionEffect[randomIndex];
+            if (effect != null)
+            {
+            Instantiate(effect, transform.position, Quaternion.identity);
+            }
         }
-
         // Find all objects in explosion radius
         Collider2D[] affectedObjects = Physics2D.OverlapCircleAll(transform.position, explosionRadius, explosionTargets);
 

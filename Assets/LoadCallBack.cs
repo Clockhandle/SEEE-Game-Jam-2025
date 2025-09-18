@@ -16,7 +16,7 @@ public class LoadCallBack : MonoBehaviour
     //    }
     //}
 
-    [SerializeField] private float minLoadTime = 2f; // seconds
+    [SerializeField] private float minLoadTime = .5f; // seconds
 
     private void Start()
     {

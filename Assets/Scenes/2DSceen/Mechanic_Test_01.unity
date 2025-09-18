@@ -900,7 +900,7 @@ MonoBehaviour:
   gunLength: 0.5
   pivotRadius: 0.1
   bombPrefab: {fileID: 5063264431685524522, guid: 996e5ff7bfe5b1a4b8f035413891f456, type: 3}
-  bombSpeed: 10
+  bombSpeed: 7
   fireRate: 0.5
   enableRaycast: 1
   raycastDistance: 1.5
@@ -911,7 +911,7 @@ MonoBehaviour:
   rayVisibleTime: 0.1
   maxPushForce: 20
   minPushForce: 10
-  explosionEffect: {fileID: 0}
+  explosionEffect: {fileID: 5063264431685524522, guid: 996e5ff7bfe5b1a4b8f035413891f456, type: 3}
   pushTargets:
     serializedVersion: 2
     m_Bits: 4294967295
