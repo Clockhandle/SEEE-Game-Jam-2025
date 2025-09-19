@@ -884,7 +884,7 @@ MonoBehaviour:
   moveSpeed: 3
   friction: 10
   rocketJumpCooldown: 0.5
-  maxHorizontalSpeed: 5
+  maxHorizontalSpeed: 7
   enableWallSliding: 1
 --- !u!114 &841068093
 MonoBehaviour:
