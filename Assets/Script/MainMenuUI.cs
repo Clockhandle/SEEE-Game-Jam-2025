@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 public class MainMenuUI : MonoBehaviour
@@ -9,7 +10,7 @@ public class MainMenuUI : MonoBehaviour
     {
         playButton.onClick.AddListener(() =>
         {
-            LoadSceneManage.Load(LoadSceneManage.SpecialScene.LevelSelect);
+            StartCoroutine(DelayTransis());
         });
 
         quitButton.onClick.AddListener(() =>
@@ -18,5 +19,12 @@ public class MainMenuUI : MonoBehaviour
         });
 
         Time.timeScale = 1f;
+    }
+
+    IEnumerator DelayTransis()
+    {
+        WhiteFlash.instance.ActiveFlashScreen();
+        yield return new WaitForSeconds(1f);
+        LoadSceneManage.Load(LoadSceneManage.SpecialScene.LevelSelect);
     }
 }

@@ -20,7 +20,9 @@ public static class LoadSceneManage
     public static void LoadLevel(string sceneName)
     {
         targetScene = sceneName;
-        SceneManager.LoadScene(targetScene);
+        //SceneManager.LoadScene(targetScene);
+        // Always load the loading screen first
+        SceneManager.LoadScene(SpecialScene.LoadingScene2D.ToString());
     }
 
 
