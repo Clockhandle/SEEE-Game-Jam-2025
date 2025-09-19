@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/2DSceen/LoadingScene2D.unity
     guid: d1e7ac56b6f7dca4485163221ecbcd55
   - enabled: 1
-    path: Assets/Scenes/2DSceen/LevelSelect.unity
+    path: Assets/Scenes/2DSceen/LevelSelect_Old.unity
     guid: 32c2b8b029a573646ace072f801a8567
   - enabled: 1
     path: Assets/Scenes/2DSceen/Level1.unity
