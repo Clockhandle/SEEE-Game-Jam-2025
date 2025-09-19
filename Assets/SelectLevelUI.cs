@@ -38,6 +38,6 @@ public class SelectLevelUI : MonoBehaviour
         WhiteFlash.instance.ActiveFlashScreen();
         yield return new WaitForSeconds(1f);
         string levelName = "Level" + levelID;
-        SceneManager.LoadScene(levelName);
+        LoadSceneManage.LoadLevel(levelName);
     }
 }
