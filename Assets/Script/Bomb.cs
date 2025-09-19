@@ -19,7 +19,8 @@ public class Bomb : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground") || 
             collision.gameObject.layer == LayerMask.NameToLayer("Destroyable") ||
-            collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+            collision.gameObject.layer == LayerMask.NameToLayer("Wall") ||
+            collision.gameObject.layer == LayerMask.NameToLayer("Bomb"))
         {
             // STOP THE BOMB MOVEMENT
             Rigidbody2D rb = GetComponent<Rigidbody2D>();

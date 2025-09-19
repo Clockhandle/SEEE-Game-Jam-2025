@@ -243,9 +243,6 @@ public class Player : MonoBehaviour
     }
 
 
-
-
-
     private void OnDrawGizmos()
     {
         Vector2 offset = new Vector2(gameObject.transform.position.x - 0.04290378f, gameObject.transform.position.y - 0.1225917f);
