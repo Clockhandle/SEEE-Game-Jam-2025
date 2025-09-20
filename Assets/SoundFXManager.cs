@@ -10,6 +10,11 @@ public class SoundFXManage : MonoBehaviour
     [SerializeField] private AudioClipData audioClipData;
 
     private float volume = 1;
+    
+    // Add cooldown system to prevent audio spam
+    private float lastExplodeTime = 0f;
+    private float explodeCooldown = 0.1f; // Minimum time between explosion sounds
+    
     private void Awake()
     {
         Instance = this;
@@ -59,20 +64,11 @@ public class SoundFXManage : MonoBehaviour
         PlaySound(audioClipData.getObj, key.transform.position);
     }
 
-    //private void ShopSlot_OnClickBuy(object sender, System.EventArgs e)
-    //{
-    //    UnclockKey key = sender as UnclockKey;
-    //    PlaySound(audioClipData.getObj, key.transform.position);
-    //}
-
     private void UnlockedDoorFlash_OnDoorUnlocked(object sender, System.EventArgs e)
     {
         UnlockedDoorFlash doorFlash = sender as UnlockedDoorFlash;
         PlaySound(audioClipData.doorKeyUnlocked, doorFlash.transform.position);
     }
-
-   
-
 
     private void WinFlagGoal_OnTriggerWinFlag(object sender, System.EventArgs e)
     {
@@ -82,21 +78,40 @@ public class SoundFXManage : MonoBehaviour
 
   
 
-    private void PlaySound(AudioClip[] audioClipArray, Vector3 position)
+    private void PlaySound(AudioClipData.SoundEffect soundEffect, Vector3 position)
     {
-        PlaySoundAt(audioClipArray[Random.Range(0, audioClipArray.Length)], position);
+        if (soundEffect.clips.Length > 0)
+        {
+            AudioClip clipToPlay = soundEffect.clips[Random.Range(0, soundEffect.clips.Length)];
+            PlaySoundAt(clipToPlay, position, soundEffect.volume);
+        }
     }
 
-    private void PlaySoundAt(AudioClip audioClip, Vector3 position)
+    private void PlaySoundAt(AudioClip audioClip, Vector3 position, float volume = 1f)
     {
-        AudioSource.PlayClipAtPoint(audioClip, position);
+        // Create a temporary GameObject for the AudioSource
+        GameObject tempAudioSource = new GameObject("TempAudio");
+        tempAudioSource.transform.position = position;
+        
+        AudioSource audioSource = tempAudioSource.AddComponent<AudioSource>();
+        audioSource.clip = audioClip;
+        audioSource.volume = volume * this.volume; // Use both individual and master volume
+        audioSource.Play();
+        
+        // Destroy the temporary GameObject after the clip finishes
+        Destroy(tempAudioSource, audioClip.length);
     }
 
 
 
     public void PlayExplodeSound()
     {
-        PlaySound(audioClipData.shootExplode, Vector3.zero);
+        // Add cooldown to prevent audio spam when rocket jumping rapidly
+        if (Time.time >= lastExplodeTime + explodeCooldown)
+        {
+            PlaySound(audioClipData.shootExplode, Vector3.zero);
+            lastExplodeTime = Time.time;
+        }
     }
 
     public void PlayButtonClickSound(Vector3 position)
@@ -108,8 +123,15 @@ public class SoundFXManage : MonoBehaviour
     {
         PlaySound(audioClipData.shoot, position);
     }
-    //public void PlayPouringSound(Vector3 position)
-    //{
-    //    PlaySound(audioClipData.drinkPour, position);
-    //}
+    
+    // Master volume control
+    public void SetMasterVolume(float newVolume)
+    {
+        volume = Mathf.Clamp01(newVolume);
+    }
+    
+    public float GetMasterVolume()
+    {
+        return volume;
+    }
 }

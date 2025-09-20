@@ -213,6 +213,9 @@ public class GunShoot : MonoBehaviour
         // Check if we hit a wall - trigger rocket jump
         if (hitLayer == LayerMask.NameToLayer("Wall"))
         {
+            // Play explosion sound for rocket jump
+            SoundFXManage.Instance.PlayExplodeSound();
+            
             // Spawn explosion effect at wall hit point
             SpawnExplosionEffect(hit.point);
             

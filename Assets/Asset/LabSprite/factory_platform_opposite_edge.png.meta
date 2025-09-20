@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: eea5b08655843394abaa155c2e890c62
+guid: d194286a452097e40b024c14dc2c4b1b
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -147,133 +147,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: machine_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 130.66666
-        width: 66
-        height: 65.333336
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ad17a30aaf173c24eb91307923aa201d
-      internalID: -859615028
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: machine_1
-      rect:
-        serializedVersion: 2
-        x: 66
-        y: 130.66666
-        width: 66
-        height: 65.333336
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 17e58431299d6b946962b766f4c959de
-      internalID: -2088200002
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: machine_2
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 65.666664
-        width: 66
-        height: 65.333336
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: cb78d85902fab2c43b686986a96ca05b
-      internalID: -1788214567
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: machine_3
-      rect:
-        serializedVersion: 2
-        x: 66
-        y: 65.666664
-        width: 66
-        height: 65.333336
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d61d1029cc724a54d86a3e17cb4a1ed7
-      internalID: 1253625376
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: machine_4
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0.6666641
-        width: 66
-        height: 65.333336
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8b5132becf19bcf4dac3bd4bf88430c0
-      internalID: 1797612458
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: machine_5
-      rect:
-        serializedVersion: 2
-        x: 66
-        y: 0.6666641
-        width: 66
-        height: 65.333336
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e9e4f72986900a846b5fc726bb226c0b
-      internalID: -1223070693
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
@@ -284,13 +158,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      machine_0: -859615028
-      machine_1: -2088200002
-      machine_2: -1788214567
-      machine_3: 1253625376
-      machine_4: 1797612458
-      machine_5: -1223070693
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -16,7 +16,7 @@ TagManager:
   - Wall
   - Explosion
   - Bomb
-  - 
+  - Trap
   - 
   - 
   - 
@@ -47,6 +47,9 @@ TagManager:
     locked: 0
   - name: Wall
     uniqueID: 2828749339
+    locked: 0
+  - name: Obj
+    uniqueID: 31933571
     locked: 0
   - name: Door
     uniqueID: 2171696085
