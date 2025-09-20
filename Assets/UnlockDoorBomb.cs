@@ -7,7 +7,7 @@ public class UnlockDoorBomb : MonoBehaviour
 {
     private Transform player;
 
-    public event EventHandler OnGetUnlockBomb;
+    public static event EventHandler OnGetUnlockBomb;
     public static event EventHandler OnBombExplode;
 
     public Transform followPoint;
@@ -26,7 +26,7 @@ public class UnlockDoorBomb : MonoBehaviour
 
     private void OnEnable()
     {
-        player = FindObjectOfType<Player>().GetComponent<Transform>();
+        player = FindObjectOfType<PlayerTest>().GetComponent<Transform>();
         doorTarget = FindObjectOfType<SteelDoor>().transform;   
        SteelDoor.OnSteelDoorUnlocked += HandleDoorUnlocked;
     }

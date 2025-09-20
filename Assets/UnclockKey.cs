@@ -8,7 +8,7 @@ public class UnclockKey : MonoBehaviour
 
     private Transform player;
 
-    public event EventHandler OnGetUnlockkey;
+    public static event EventHandler OnGetUnlockkey;
 
     public Transform followPoint;
     private bool canfollowPlayer = false;
@@ -20,7 +20,7 @@ public class UnclockKey : MonoBehaviour
 
     private void OnEnable()
     {
-        player = FindObjectOfType<Player>().GetComponent<Transform>();
+        player = FindObjectOfType<PlayerTest>().GetComponent<Transform>();
 
         UnlockedDoorFlash.OnDoorUnlocked += HandleDoorUnlocked;
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,11 +33,28 @@ public class PlayerTest : MonoBehaviour
     // Property to check if we're in rocket jump cooldown period
     public bool IsInRocketJumpCooldown => Time.time - lastRocketJumpTime < rocketJumpCooldown;
 
+
+    [Header("Death")]
+    bool isDead;
+    public GameObject deathEffect;
+
+    [Header("UnlockEvent")]
+    private bool hasKey = false;
+    private bool hasBomb = false;
+
+
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         playerInput = GetComponent<PlayerInput>();
         moveAction = playerInput.actions["Movement"];
+    }
+    private void Start()
+    {
+        DeathObj.OnDeath += DeathObj_OnPlayerDeath;
+        UnclockKey.OnGetUnlockkey += Key_OnGetUnlockedKey;
+        UnlockDoorBomb.OnGetUnlockBomb += Bomb_OnGetBomb;
     }
 
     void OnEnable() => moveAction.Enable();
@@ -44,11 +62,15 @@ public class PlayerTest : MonoBehaviour
 
     void Update()
     {
+        if (isDead) return;
+
         moveInput = moveAction.ReadValue<float>();
     }
 
     void FixedUpdate()
     {
+        if (isDead) return;
+
         if (IsInRocketJumpCooldown)
         {
             // During rocket jump cooldown, blend movement input with existing momentum
@@ -155,6 +177,32 @@ public class PlayerTest : MonoBehaviour
     {
         lastRocketJumpTime = Time.time;
     }
+
+    //Death
+    void DeathObj_OnPlayerDeath(object sender, EventArgs e)
+    {
+        GameObject deathEffect = Instantiate(this.deathEffect, transform.position, Quaternion.identity);
+        Destroy(deathEffect, 1f);
+    }
+
+    public void SetDeath(bool value)
+    {
+        isDead = value;
+    }
+    void Key_OnGetUnlockedKey(object sender, EventArgs e)
+    {
+        hasKey = true;
+    }
+
+    void Bomb_OnGetBomb(object sender, EventArgs e)
+    {
+        hasBomb = true;
+    }
+
+    public bool HasKey() => hasKey;
+    public bool HasBomb() => hasBomb;
+
+
 
     // Debug visualization
     void OnDrawGizmosSelected()

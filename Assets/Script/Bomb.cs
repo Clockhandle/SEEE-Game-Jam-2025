@@ -39,6 +39,8 @@ public class Bomb : MonoBehaviour
     private void Explode()
     {
         anim.SetTrigger("Explode");
+        //Explode sound
+        SoundFXManage.Instance.PlayExplodeSound();
         Collider2D[] objects = Physics2D.OverlapCircleAll(transform.position, impactRange, impactLayer);
         foreach(Collider2D obj in objects)
         {

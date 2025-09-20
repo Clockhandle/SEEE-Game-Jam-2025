@@ -1,8 +1,11 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GunShoot : MonoBehaviour
 {
+   
+
     [Header("Gun Settings")]
     [SerializeField] private Transform playerTransform;
     [SerializeField] private float gunLength = 0.5f;
@@ -147,6 +150,7 @@ public class GunShoot : MonoBehaviour
 
     private void Shoot()
     {
+        
         if (bombPrefab == null) return;
 
         GameObject bomb = Instantiate(bombPrefab, transform.position, transform.rotation);
@@ -157,6 +161,7 @@ public class GunShoot : MonoBehaviour
             Vector2 shootDirection = transform.right;
             bombRb.velocity = shootDirection * bombSpeed;
         }
+        
     }
 
     private void ShootRaycast()
@@ -190,6 +195,7 @@ public class GunShoot : MonoBehaviour
     {
         if (bombPrefab == null) return;
 
+        SoundFXManage.Instance.PlayShootSound(transform.position);
         GameObject bomb = Instantiate(bombPrefab, transform.position, transform.rotation);
         
         Rigidbody2D bombRb = bomb.GetComponent<Rigidbody2D>();

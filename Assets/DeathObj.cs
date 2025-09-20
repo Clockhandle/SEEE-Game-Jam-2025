@@ -17,7 +17,7 @@ public class DeathObj : MonoBehaviour
             //Active Cam Shake
             CamShake.instance.ShakeDeath();
 
-            Player player = collision.gameObject.GetComponent<Player>();
+            PlayerTest player = collision.gameObject.GetComponent<PlayerTest>();
             player.SetDeath(true);
 
             Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
