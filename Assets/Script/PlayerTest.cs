@@ -17,6 +17,9 @@ public class PlayerTest : MonoBehaviour
     [Header("Wall Sliding Settings")]
     [SerializeField] private bool enableWallSliding = true; // Enable wall sliding when airborne
 
+    [Header("Winning")]
+    bool isWinning = false;
+
     private Rigidbody2D rb;
     private PlayerInput playerInput;
     private InputAction moveAction;
@@ -46,6 +49,7 @@ public class PlayerTest : MonoBehaviour
 
     void Awake()
     {
+        isWinning = false;
         rb = GetComponent<Rigidbody2D>();
         playerInput = GetComponent<PlayerInput>();
         moveAction = playerInput.actions["Movement"];
@@ -55,14 +59,20 @@ public class PlayerTest : MonoBehaviour
         DeathObj.OnDeath += DeathObj_OnPlayerDeath;
         UnclockKey.OnGetUnlockkey += Key_OnGetUnlockedKey;
         UnlockDoorBomb.OnGetUnlockBomb += Bomb_OnGetBomb;
+        WinFlagGoal.instance.OnTriggerWinFlag += WinFlag_OnWinning;
     }
 
     void OnEnable() => moveAction.Enable();
     void OnDisable() => moveAction.Disable();
 
+    void WinFlag_OnWinning(object sender, EventArgs e)
+    {
+        isWinning = true;
+    }
     void Update()
     {
         if (isDead) return;
+        if (isWinning) return;
 
         moveInput = moveAction.ReadValue<float>();
     }
@@ -70,6 +80,7 @@ public class PlayerTest : MonoBehaviour
     void FixedUpdate()
     {
         if (isDead) return;
+        if (isWinning) return;
 
         if (IsInRocketJumpCooldown)
         {
