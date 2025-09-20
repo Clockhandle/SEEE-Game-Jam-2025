@@ -5,15 +5,16 @@ using UnityEngine;
 
 public class UnclockKey : MonoBehaviour
 {
-
     private Transform player;
 
     public static event EventHandler OnGetUnlockkey;
 
     public Transform followPoint;
     private bool canfollowPlayer = false;
+    private bool keyCollected = false; // Prevent multiple collections
+    private bool keyConsumed = false; // Prevent multiple consumptions
 
-    public float followSpeed = 5f;  // how fast it chases target
+    public float followSpeed = 5f;
     public float smoothDamp = 0.3f;
 
     private Vector3 velocity;
@@ -21,35 +22,71 @@ public class UnclockKey : MonoBehaviour
     private void OnEnable()
     {
         player = FindObjectOfType<PlayerTest>().GetComponent<Transform>();
-
-        UnlockedDoorFlash.OnDoorUnlocked += HandleDoorUnlocked;
+        
+        // Listen for key consumption events
+        PlayerTest.OnKeyUsed += HandleKeyUsed;
     }
+    
     private void OnDisable()
     {
-        UnlockedDoorFlash.OnDoorUnlocked -= HandleDoorUnlocked;
+        PlayerTest.OnKeyUsed -= HandleKeyUsed;
     }
-
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (keyCollected) return; // Prevent multiple collections
+        
         if (collision.CompareTag("Player"))
         {
             if(player == null)
             {
                 player = collision.transform;
-               
             }
+            
+            keyCollected = true;
             canfollowPlayer = true;
             
             OnGetUnlockkey?.Invoke(this, EventArgs.Empty);
-            //Destroy(gameObject, .2f);
-
+            
+            // DON'T destroy - let it follow the player
+            // The key will be destroyed when a door consumes it
         }
+    }
+
+    private void HandleKeyUsed(object sender, EventArgs e)
+    {
+        // Only destroy if this key was collected and hasn't been consumed yet
+        if (keyCollected && !keyConsumed)
+        {
+            keyConsumed = true;
+            ConsumeKey();
+        }
+    }
+
+    public void ConsumeKey()
+    {
+        StartCoroutine(ConsumeEffect());
+    }
+    
+    private IEnumerator ConsumeEffect()
+    {
+        // Optional: Add destruction effect
+        float duration = 0.3f;
+        Vector3 startScale = transform.localScale;
+        
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            float progress = t / duration;
+            transform.localScale = Vector3.Lerp(startScale, Vector3.zero, progress);
+            yield return null;
+        }
+        
+        Destroy(gameObject);
     }
 
     void LateUpdate()
     {
-        if(canfollowPlayer && player != null)
+        if(canfollowPlayer && player != null && !keyConsumed)
         {
             // target follow position (slightly behind player)
             Vector3 targetPos = followPoint.position;
@@ -65,11 +102,5 @@ public class UnclockKey : MonoBehaviour
 
             transform.Rotate(0f, 0f, 180f * Time.deltaTime);
         }
-
-    }
-
-    private void HandleDoorUnlocked(object sender, EventArgs e)
-    {
-        Destroy(gameObject); 
     }
 }

@@ -42,9 +42,13 @@ public class PlayerTest : MonoBehaviour
     public GameObject deathEffect;
 
     [Header("UnlockEvent")]
-    private bool hasKey = false;
-    private bool hasBomb = false;
+    private int keyCount = 0; // Changed from bool hasKey to int keyCount
+    private int bombCount = 0; // Changed from bool hasBomb to int bombCount
 
+    // Add event for key consumption
+    public static event EventHandler OnKeyUsed;
+    // Add event for bomb consumption
+    public static event EventHandler OnBombUsed;
 
 
     void Awake()
@@ -202,16 +206,52 @@ public class PlayerTest : MonoBehaviour
     }
     void Key_OnGetUnlockedKey(object sender, EventArgs e)
     {
-        hasKey = true;
+        keyCount++; // Increment key count instead of setting to true
+        Debug.Log($"Key collected! Total keys: {keyCount}");
     }
 
     void Bomb_OnGetBomb(object sender, EventArgs e)
     {
-        hasBomb = true;
+        bombCount++; // Instead of hasBomb = true;
+        Debug.Log($"Bomb collected! Total bombs: {bombCount}");
     }
 
-    public bool HasKey() => hasKey;
-    public bool HasBomb() => hasBomb;
+    public bool HasKey() => keyCount > 0; // Returns true if player has at least one key
+
+    // Update the UseKey method to fire an event
+    public bool UseKey()
+    {
+        if (keyCount > 0)
+        {
+            keyCount--;
+            Debug.Log($"Key used! Remaining keys: {keyCount}");
+            
+            // Fire event to notify keys that one was consumed
+            OnKeyUsed?.Invoke(this, EventArgs.Empty);
+            return true;
+        }
+        return false;
+    }
+
+    // Optional: Get current key count
+    public int GetKeyCount() => keyCount;
+
+    public bool HasBomb() => bombCount > 0;
+
+    // Add a UseBomb method similar to UseKey
+    public bool UseBomb()
+    {
+        if (bombCount > 0)
+        {
+            bombCount--;
+            Debug.Log($"Bomb used! Remaining bombs: {bombCount}");
+            
+            // Fire event to notify bombs that one was consumed
+            OnBombUsed?.Invoke(this, EventArgs.Empty);
+            return true;
+        }
+        return false;
+    }
 
 
 

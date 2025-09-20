@@ -12,54 +12,71 @@ public class UnlockDoorBomb : MonoBehaviour
 
     public Transform followPoint;
     private bool canfollowPlayer = false;
+    private bool bombCollected = false; // Prevent multiple collections
+    private bool bombConsumed = false; // Prevent multiple consumptions
     private bool isAttachedToDoor = false;
 
     public float followSpeed = 5f;  // how fast it chases target
     public float smoothDamp = 0.3f;
 
     private Vector3 velocity;
-    private Transform doorTarget;
+    private SteelDoor attachedDoor; // The door this bomb is currently attached to
 
     [Header("Flash")]
     [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private float flashDuration;
+    [SerializeField] private float flashDuration = 0.2f;
+
+    // Public properties to check bomb state
+    public bool IsBombCollected => bombCollected;
+    public bool IsBombConsumed => bombConsumed;
 
     private void OnEnable()
     {
         player = FindObjectOfType<PlayerTest>().GetComponent<Transform>();
-        doorTarget = FindObjectOfType<SteelDoor>().transform;   
-       SteelDoor.OnSteelDoorUnlocked += HandleDoorUnlocked;
     }
-
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (bombCollected) return; // Prevent multiple collections
+        
         if (collision.CompareTag("Player"))
         {
             if (player == null)
             {
                 player = collision.transform;
-
             }
+            
+            bombCollected = true;
             canfollowPlayer = true;
 
             OnGetUnlockBomb?.Invoke(this, EventArgs.Empty);
-            //Destroy(gameObject, .2f);
-
+            Debug.Log($"Bomb {name} collected by player!");
         }
+    }
+
+    // Simple method: Attach this bomb to a specific door
+    public void AttachToSpecificDoor(SteelDoor door)
+    {
+        if (bombConsumed) return; // Already consumed
+        
+        attachedDoor = door;
+        isAttachedToDoor = true;
+        bombConsumed = true;
+        
+        Debug.Log($"Bomb {name} attaching to door: {door.name}");
+        StartCoroutine(FlashRoutine());
     }
 
     void LateUpdate()
     {
-
-        if (isAttachedToDoor)
+        if (isAttachedToDoor && attachedDoor != null)
         {
-            // Stick to door
-            transform.position = doorTarget.position;
+            // Stick to the attached door
+            transform.position = attachedDoor.transform.position;
             return;
         }
 
-        if (canfollowPlayer && player != null)
+        if (canfollowPlayer && player != null && !bombConsumed)
         {
             // target follow position (slightly behind player)
             Vector3 targetPos = followPoint.position;
@@ -75,27 +92,29 @@ public class UnlockDoorBomb : MonoBehaviour
 
             transform.Rotate(0f, 0f, 180f * Time.deltaTime);
         }
-
-    }
-
-    private void HandleDoorUnlocked(object sender, EventArgs e)
-    {
-        isAttachedToDoor = true;
-        StartCoroutine(FlashRoutine());
     }
 
     private IEnumerator FlashRoutine()
     {
+        Debug.Log($"Bomb {name} starting flash routine...");
+        
         for (int i = 0; i <= 4; i++)
         {
             spriteRenderer.material.SetInt("_Flash", 1);
             yield return new WaitForSeconds(flashDuration);
             spriteRenderer.material.SetInt("_Flash", 0);
-
             yield return new WaitForSeconds(flashDuration);
         }
-        OnBombExplode?.Invoke(this, EventArgs.Empty );  
+        
+        Debug.Log($"Bomb {name} flash routine complete, exploding door...");
+        
+        // Explode the attached door
+        if (attachedDoor != null)
+        {
+            attachedDoor.ExplodeDoor();
+        }
+        
+        OnBombExplode?.Invoke(this, EventArgs.Empty);
         Destroy(gameObject);
-
     }
 }

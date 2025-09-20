@@ -10,16 +10,21 @@ public class UnlockedDoorFlash : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private float flashDuration;
     
-    [Header("Open Door Settings")]
-    [SerializeField] private GameObject openDoorObject; // Reference to existing door GameObject in scene
-    [SerializeField] private bool activateOpenDoor = true; // Toggle to enable/disable activation
+    [Header("Actual Door Settings")]
+    [SerializeField] private GameObject actualDoorObject; // Reference to the actual door GameObject
+    [SerializeField] private bool manageDoorSprite = true; // Toggle to enable/disable sprite management
+    
+    [Header("Key Settings")]
+    [SerializeField] private bool consumeKey = true; // Whether this door consumes a key when unlocked
+    
+    private bool doorUnlocked = false; // Prevent multiple unlocks
 
     private void Awake()
     {
-        // Ensure the open door is initially disabled
-        if (openDoorObject != null)
+        // Initially disable the actual door's sprite so it's hidden behind the locked door
+        if (manageDoorSprite && actualDoorObject != null)
         {
-            openDoorObject.SetActive(false);
+            DisableActualDoorSprite();
         }
     }
 
@@ -31,7 +36,7 @@ public class UnlockedDoorFlash : MonoBehaviour
 
     private IEnumerator FlashRoutine()
     {
-        for(int i = 0; i<= 3; i++)
+        for (int i = 0; i <= 3; i++)
         {
             spriteRenderer.material.SetInt("_Flash", 1);
             yield return new WaitForSeconds(flashDuration);
@@ -39,59 +44,59 @@ public class UnlockedDoorFlash : MonoBehaviour
 
             yield return new WaitForSeconds(flashDuration);
         }
-        
-        // Activate open door before destroying the locked door
-        if (activateOpenDoor && openDoorObject != null)
+
+        // Re-enable the actual door's sprite renderer to make it visible
+        if (manageDoorSprite && actualDoorObject != null)
         {
-            ActivateOpenDoor();
+            EnableActualDoorSprite();
         }
         
+        // Destroy the locked door overlay
         Destroy(gameObject);
     }
 
-    private void ActivateOpenDoor()
+    private void DisableActualDoorSprite()
     {
-        // Simply activate the existing door GameObject
-        openDoorObject.SetActive(true);
-        
-        // Ensure the door renderer has full alpha immediately
-        if (openDoorObject.TryGetComponent<SpriteRenderer>(out SpriteRenderer openDoorRenderer))
+        // Disable the SpriteRenderer of the actual door to hide it initially
+        if (actualDoorObject.TryGetComponent<SpriteRenderer>(out SpriteRenderer doorRenderer))
         {
-            Color doorColor = openDoorRenderer.color;
-            doorColor.a = 1f; // Set alpha to full opacity
-            openDoorRenderer.color = doorColor;
+            doorRenderer.enabled = false;
         }
     }
-    
-    // Optional: Smooth fade-in effect for the open door
-    private IEnumerator FadeInOpenDoor(SpriteRenderer doorRenderer)
+
+    private void EnableActualDoorSprite()
     {
-        Color originalColor = doorRenderer.color;
-        Color transparentColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
-        
-        doorRenderer.color = transparentColor;
-        
-        float fadeSpeed = 2f; // Adjust fade speed as needed
-        float elapsedTime = 0f;
-        
-        while (elapsedTime < 1f)
+        // Re-enable the SpriteRenderer of the actual door to make it visible
+        if (actualDoorObject.TryGetComponent<SpriteRenderer>(out SpriteRenderer doorRenderer))
         {
-            elapsedTime += Time.deltaTime * fadeSpeed;
-            doorRenderer.color = Color.Lerp(transparentColor, originalColor, elapsedTime);
-            yield return null;
+            doorRenderer.enabled = true;
         }
-        
-        doorRenderer.color = originalColor;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (doorUnlocked) return; // Prevent multiple unlocks
+        
         if (collision.gameObject.CompareTag("Player"))
         {
-            PlayerTest player = collision.gameObject.GetComponent<PlayerTest>();    
-            if(player != null && player.HasKey())
+            PlayerTest player = collision.gameObject.GetComponent<PlayerTest>();
+            if (player != null && player.HasKey())
             {
-                FlashEffect();
+                // Try to consume a key if this door requires it
+                if (consumeKey)
+                {
+                    if (player.UseKey()) // This consumes one key
+                    {
+                        doorUnlocked = true;
+                        FlashEffect();
+                    }
+                }
+                else
+                {
+                    // Door doesn't consume keys (master key scenario)
+                    doorUnlocked = true;
+                    FlashEffect();
+                }
             }
         }
     }
