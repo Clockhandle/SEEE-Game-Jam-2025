@@ -38,7 +38,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Blur_Offset: 0.0005
-    - _Number_Of_Scans_Line: 40
+    - _Number_Of_Scans_Line: 500
     - _Scans_Line_Speed: -0.01
     m_Colors:
     - _Bloom_Color: {r: 1, g: 1, b: 1, a: 0}

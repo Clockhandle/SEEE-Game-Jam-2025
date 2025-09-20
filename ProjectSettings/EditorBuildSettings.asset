@@ -15,18 +15,30 @@ EditorBuildSettings:
     path: Assets/Scenes/2DSceen/LevelSelect.unity
     guid: 26c6c171373f05e4c851d0e56a994f87
   - enabled: 1
-    path: Assets/Scenes/2DSceen/Level1.unity
-    guid: 32dd81a2182f4af4a973cb3c8cbee816
-  - enabled: 1
-    path: Assets/Scenes/2DSceen/Level2.unity
-    guid: 5308f291f130bf54586d9af3e86d99e8
-  - enabled: 1
-    path: Assets/Scenes/2DSceen/Level3.unity
-    guid: fc84fd37ca6c3cb42a9b146020f11c94
-  - enabled: 1
-    path: Assets/Scenes/2DSceen/Level4.unity
-    guid: 9ce005ea7a2f6df4bb2721efdc618886
-  - enabled: 1
     path: Assets/Scenes/Level_Demo/Demo_01.unity
     guid: 395fad111e90ac24e924c95098e89c13
+  - enabled: 1
+    path: Assets/Scenes/Level_Demo/Demo_02.unity
+    guid: ee7fddcdad0168d4c9896fae56d333e4
+  - enabled: 1
+    path: Assets/Scenes/Level_Demo/Demo_03.unity
+    guid: 9fac4a7fa0b80a347858cdd61add547d
+  - enabled: 1
+    path: Assets/Scenes/Level_Demo/Demo_04.unity
+    guid: 71ecf3881facb2a4892cfe27700e74ff
+  - enabled: 1
+    path: Assets/Scenes/Level_Demo/Demo_05.unity
+    guid: 398248697596a474d8f5d9d5571baebc
+  - enabled: 1
+    path: Assets/Scenes/Level_Demo/Demo_06.unity
+    guid: 3d87e39c1e5b38a4b91694f9bbb9d203
+  - enabled: 1
+    path: Assets/Scenes/Level_Demo/Demo_07.unity
+    guid: 8fe9fd71a73444446a512338809c80b8
+  - enabled: 1
+    path: Assets/Scenes/Level_Demo/Demo_08.unity
+    guid: 448175b9affab1c4ba5cf588abe39677
+  - enabled: 1
+    path: Assets/Scenes/Level_Demo/Demo_09.unity
+    guid: fd371aaeb3d71dc40905cd5aff4ae47b
   m_configObjects: {}

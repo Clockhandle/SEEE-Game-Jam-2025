@@ -108,6 +108,27 @@ public class GunShoot : MonoBehaviour
         if (mainCamera == null) return;
 
         Vector3 mouseScreenPos = Input.mousePosition;
+
+        // Get the lens distortion component from the camera or volume
+        var volumeStack = UnityEngine.Rendering.VolumeManager.instance.stack;
+        UnityEngine.Rendering.Universal.LensDistortion lensDistortion = volumeStack.GetComponent<UnityEngine.Rendering.Universal.LensDistortion>();
+
+        if (lensDistortion != null && lensDistortion.active)
+        {
+            // Convert screen position to normalized coordinates (0-1)
+            Vector2 normalizedPos = new Vector2(
+                mouseScreenPos.x / Screen.width,
+                mouseScreenPos.y / Screen.height
+            );
+
+            // Apply inverse distortion correction
+            Vector2 correctedPos = UndistortPosition(normalizedPos, lensDistortion.intensity.value);
+
+            // Convert back to screen coordinates
+            mouseScreenPos.x = correctedPos.x * Screen.width;
+            mouseScreenPos.y = correctedPos.y * Screen.height;
+        }
+
         mouseScreenPos.z = mainCamera.nearClipPlane;
         Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
 
@@ -130,6 +151,29 @@ public class GunShoot : MonoBehaviour
         transform.position = gunWorldPosition;
         transform.rotation = Quaternion.Euler(0, 0, aimAngle);
         transform.localScale = originalGunScale;
+    }
+
+    private Vector2 UndistortPosition(Vector2 normalizedPos, float distortionIntensity)
+    {
+        // Convert to centered coordinates (-0.5 to 0.5)
+        Vector2 centered = normalizedPos - Vector2.one * 0.5f;
+        
+        // Calculate distance from center
+        float distance = centered.magnitude;
+        
+        // Apply inverse barrel distortion
+        float distortedDistance = distance;
+        if (distance > 0.001f) // Avoid division by zero
+        {
+            // Inverse of the barrel distortion formula
+            distortedDistance = distance / (1.0f + distortionIntensity * distance * distance);
+        }
+        
+        // Scale the centered position
+        Vector2 corrected = centered.normalized * distortedDistance;
+        
+        // Convert back to normalized coordinates
+        return corrected + Vector2.one * 0.5f;
     }
 
     private void HandleShooting()
