@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - RecoilBullet
   layers:
   - Default
   - TransparentFX
@@ -40,6 +41,12 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Barrier
+    uniqueID: 3380958121
+    locked: 0
+  - name: Wall
+    uniqueID: 2828749339
     locked: 0
   - name: Door
     uniqueID: 2171696085

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4965686680923646007}
   - component: {fileID: 658304341720163805}
   - component: {fileID: 1440636571459993356}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bomb2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 297400541649638553}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.02, y: 3.62, z: 0}
+  m_LocalPosition: {x: 14.02, y: 3.622, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -74,10 +74,10 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1253850861
+  m_SortingLayer: 4
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 29c60849967f5414185a8203cd007186, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 15c1d989f06104b4699779a42b010ca6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -97,14 +97,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 297400541649638553}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fd00e6f472eb5443a868257dab14742, type: 3}
+  m_Script: {fileID: 11500000, guid: 3afc5b9270f4068479a204e1b8a50ab1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  impactRange: 4
-  force: 20
+  impactRange: 0
+  force: 0
   impactLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
 --- !u!95 &4965686680923646007
 Animator:
   serializedVersion: 5
@@ -158,9 +158,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.18735623}
+  m_Offset: {x: -0.00687027, y: -0.23316252}
   serializedVersion: 2
-  m_Radius: 0.7768843
+  m_Radius: 0.32569373
 --- !u!50 &1440636571459993356
 Rigidbody2D:
   serializedVersion: 4
