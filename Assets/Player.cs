@@ -64,16 +64,17 @@ public class Player : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        key = FindObjectOfType<UnclockKey>();
 
-        unlockBomb = FindObjectOfType<UnlockDoorBomb>();
+        //key = FindObjectOfType<UnclockKey>();
+        //unlockBomb = FindObjectOfType<UnlockDoorBomb>();
 
         currentExplodeRaidus = startRadius;
       
-        if(key!= null)
-            key.OnGetUnlockkey += Key_OnGetUnlockedKey;
-        if(unlockBomb!= null)
-            unlockBomb.OnGetUnlockBomb += Bomb_OnGetBomb;
+       // if(key!= null)
+            UnclockKey.OnGetUnlockkey += Key_OnGetUnlockedKey;
+      //  if(unlockBomb!= null)
+            //unlockBomb.OnGetUnlockBomb += Bomb_OnGetBomb;
+        UnlockDoorBomb.OnGetUnlockBomb += Bomb_OnGetBomb;
 
         DeathObj.OnDeath += DeathObj_OnPlayerDeath;
         WinFlagGoal.instance.OnTriggerWinFlag += WinFlag_OnWinning;

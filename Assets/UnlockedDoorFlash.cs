@@ -44,7 +44,7 @@ public class UnlockedDoorFlash : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Player player = collision.gameObject.GetComponent<Player>();    
+            PlayerTest player = collision.gameObject.GetComponent<PlayerTest>();    
             if(player!= null && player.HasKey())
             {
                 FlashEffect();

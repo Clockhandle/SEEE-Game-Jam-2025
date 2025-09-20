@@ -18,7 +18,7 @@ public class SteelDoor : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
           
-            Player player = collision.gameObject.GetComponent<Player>();
+            PlayerTest player = collision.gameObject.GetComponent<PlayerTest>();
             if (player != null && player.HasBomb())
             {
                 OnSteelDoorUnlocked?.Invoke(this, EventArgs.Empty);

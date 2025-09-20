@@ -38,7 +38,9 @@ public class PlayerTest : MonoBehaviour
     bool isDead;
     public GameObject deathEffect;
 
-
+    [Header("UnlockEvent")]
+    private bool hasKey = false;
+    private bool hasBomb = false;
 
 
 
@@ -51,6 +53,8 @@ public class PlayerTest : MonoBehaviour
     private void Start()
     {
         DeathObj.OnDeath += DeathObj_OnPlayerDeath;
+        UnclockKey.OnGetUnlockkey += Key_OnGetUnlockedKey;
+        UnlockDoorBomb.OnGetUnlockBomb += Bomb_OnGetBomb;
     }
 
     void OnEnable() => moveAction.Enable();
@@ -185,6 +189,18 @@ public class PlayerTest : MonoBehaviour
     {
         isDead = value;
     }
+    void Key_OnGetUnlockedKey(object sender, EventArgs e)
+    {
+        hasKey = true;
+    }
+
+    void Bomb_OnGetBomb(object sender, EventArgs e)
+    {
+        hasBomb = true;
+    }
+
+    public bool HasKey() => hasKey;
+    public bool HasBomb() => hasBomb;
 
 
 

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4256df3c3c4b19d4fafadf5deef76ff5, type: 3}
+  m_Name: Audio
+  m_EditorClassIdentifier: 
+  shoot:
+  - {fileID: 8300000, guid: 4a625f0120be8fe4faf7eb98d708c161, type: 3}
+  - {fileID: 8300000, guid: 45d23402c5792f74ab50d55bef63056c, type: 3}
+  shootExplode:
+  - {fileID: 8300000, guid: 03f5ba5d59dfd92498fee0f3fa1d001c, type: 3}
+  - {fileID: 8300000, guid: 9db3750f924565342baf754592b9c7c6, type: 3}
+  selfExplode:
+  - {fileID: 8300000, guid: ff13ce8fc29fd9840b453a62cee90ba3, type: 3}
+  death:
+  - {fileID: 8300000, guid: ee583a5ba20d4404dbb26e6ad2c93bfd, type: 3}
+  win:
+  - {fileID: 8300000, guid: 30eeee24dd509654183af3963b44d3a7, type: 3}
+  getObj:
+  - {fileID: 8300000, guid: aafbae106e1a42f4d9a7505740b7cd3d, type: 3}
+  buttonClick:
+  - {fileID: 8300000, guid: f2b685315c910dc449471b2bc3cad143, type: 3}
+  doorExplode:
+  - {fileID: 8300000, guid: 6fccadbdc2530324aa958fd49cfdd02d, type: 3}
+  - {fileID: 8300000, guid: b02c629b07e7a024bb64c3cd85ccd139, type: 3}
+  doorKeyUnlocked:
+  - {fileID: 8300000, guid: 5cb5f4aed8fac524e8a70a2aab061a73, type: 3}
+  closingGate: []
