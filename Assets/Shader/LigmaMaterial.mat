@@ -37,8 +37,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Blur_Offset: 0
-    - _Scans_Line_Speed: 0.05
+    - _Blur_Offset: 0.0005
+    - _Number_Of_Scans_Line: 40
+    - _Scans_Line_Speed: -0.01
     m_Colors:
+    - _Bloom_Color: {r: 1, g: 1, b: 1, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
