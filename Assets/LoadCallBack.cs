@@ -4,28 +4,11 @@ using UnityEngine;
 
 public class LoadCallBack : MonoBehaviour
 {
-    //private bool isFirstUpdate = true;
-
-    //private void Update()
-    //{
-    //    if (isFirstUpdate)
-    //    {
-    //        isFirstUpdate = false;
-
-    //        LoadSceneManage.LoaderCallback();
-    //    }
-    //}
-
-    [SerializeField] private float minLoadTime = 2f; // seconds
-
+    // This script is no longer needed since LoadSceneManage now loads scenes directly
+    // You can safely delete this script from your LoadingScene2D scene
+    
     private void Start()
     {
-        StartCoroutine(WaitAndLoad());
-    }
-
-    private IEnumerator WaitAndLoad()
-    {
-        yield return new WaitForSeconds(minLoadTime);
-        LoadSceneManage.LoaderCallback();
+        Debug.LogWarning("LoadCallBack script is deprecated. LoadSceneManage now loads scenes directly without loading screen.");
     }
 }

@@ -58,21 +58,41 @@ public class PlayerTest : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         moveAction = playerInput.actions["Movement"];
     }
+
     private void Start()
     {
         DeathObj.OnDeath += DeathObj_OnPlayerDeath;
         UnclockKey.OnGetUnlockkey += Key_OnGetUnlockedKey;
         UnlockDoorBomb.OnGetUnlockBomb += Bomb_OnGetBomb;
-        WinFlagGoal.instance.OnTriggerWinFlag += WinFlag_OnWinning;
+
+        // Safely subscribe to WinFlagGoal if it exists
+        if (WinFlagGoal.instance != null)
+        {
+            WinFlagGoal.instance.OnTriggerWinFlag += WinFlag_OnWinning;
+        }
     }
 
-    void OnEnable() => moveAction.Enable();
-    void OnDisable() => moveAction.Disable();
+    void OnEnable() => moveAction?.Enable();
+    void OnDisable() => moveAction?.Disable();
+
+    private void OnDestroy()
+    {
+        // Unsubscribe from all events to prevent MissingReferenceException
+        DeathObj.OnDeath -= DeathObj_OnPlayerDeath;
+        UnclockKey.OnGetUnlockkey -= Key_OnGetUnlockedKey;
+        UnlockDoorBomb.OnGetUnlockBomb -= Bomb_OnGetBomb;
+
+        if (WinFlagGoal.instance != null)
+        {
+            WinFlagGoal.instance.OnTriggerWinFlag -= WinFlag_OnWinning;
+        }
+    }
 
     void WinFlag_OnWinning(object sender, EventArgs e)
     {
         isWinning = true;
     }
+
     void Update()
     {
         if (isDead) return;
@@ -94,10 +114,10 @@ public class PlayerTest : MonoBehaviour
                 // Add limited movement influence to existing velocity instead of overriding
                 float movementInfluence = moveInput * moveSpeed * 0.3f;
                 float newXVelocity = rb.velocity.x + movementInfluence * Time.fixedDeltaTime * 10f;
-                
+
                 // Clamp horizontal velocity to maximum speed limit
                 newXVelocity = Mathf.Clamp(newXVelocity, -maxHorizontalSpeed, maxHorizontalSpeed);
-                
+
                 Vector2 newVelocity = new Vector2(newXVelocity, rb.velocity.y);
                 rb.velocity = newVelocity;
             }
@@ -130,7 +150,7 @@ public class PlayerTest : MonoBehaviour
                 // No input - apply friction to stop horizontal movement
                 float currentXVelocity = rb.velocity.x;
                 float frictionForce = friction * Time.fixedDeltaTime;
-                
+
                 // Apply friction towards zero velocity
                 if (Mathf.Abs(currentXVelocity) > frictionForce)
                 {
@@ -174,7 +194,7 @@ public class PlayerTest : MonoBehaviour
         {
             // Simple approach: if touching any wall, mark as touching wall
             isTouchingWall = true;
-            
+
             // Check if any contact point indicates ground collision (normal pointing up)
             foreach (ContactPoint2D contact in collision.contacts)
             {
@@ -196,14 +216,25 @@ public class PlayerTest : MonoBehaviour
     //Death
     void DeathObj_OnPlayerDeath(object sender, EventArgs e)
     {
-        GameObject deathEffect = Instantiate(this.deathEffect, transform.position, Quaternion.identity);
-        Destroy(deathEffect, 1f);
+        // Add null check to prevent errors if object is being destroyed
+        if (this == null || deathEffect == null) return;
+
+        try
+        {
+            GameObject deathEffect = Instantiate(this.deathEffect, transform.position, Quaternion.identity);
+            Destroy(deathEffect, 1f);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"Error in DeathObj_OnPlayerDeath: {ex.Message}");
+        }
     }
 
     public void SetDeath(bool value)
     {
         isDead = value;
     }
+
     void Key_OnGetUnlockedKey(object sender, EventArgs e)
     {
         keyCount++; // Increment key count instead of setting to true
@@ -225,7 +256,7 @@ public class PlayerTest : MonoBehaviour
         {
             keyCount--;
             Debug.Log($"Key used! Remaining keys: {keyCount}");
-            
+
             // Fire event to notify keys that one was consumed
             OnKeyUsed?.Invoke(this, EventArgs.Empty);
             return true;
@@ -245,7 +276,7 @@ public class PlayerTest : MonoBehaviour
         {
             bombCount--;
             Debug.Log($"Bomb used! Remaining bombs: {bombCount}");
-            
+
             // Fire event to notify bombs that one was consumed
             OnBombUsed?.Invoke(this, EventArgs.Empty);
             return true;
@@ -253,21 +284,19 @@ public class PlayerTest : MonoBehaviour
         return false;
     }
 
-
-
     // Debug visualization
     void OnDrawGizmosSelected()
     {
         Vector3 center = transform.position;
-        
+
         // Ground indicator
         Gizmos.color = isGrounded ? Color.green : Color.gray;
         Gizmos.DrawWireCube(center + Vector3.down * 0.8f, Vector3.one * 0.2f);
-        
+
         // Wall indicator
         Gizmos.color = isTouchingWall ? Color.red : Color.gray;
         Gizmos.DrawWireSphere(center, 0.3f);
-        
+
         // Wall sliding active indicator
         if (enableWallSliding && isTouchingWall && !isGrounded)
         {

@@ -21,7 +21,8 @@ public class UnclockKey : MonoBehaviour
 
     private void OnEnable()
     {
-        player = FindObjectOfType<PlayerTest>().GetComponent<Transform>();
+        // Find player fresh - don't cache across scene transitions
+        RefreshPlayerReference();
         
         // Listen for key consumption events
         PlayerTest.OnKeyUsed += HandleKeyUsed;
@@ -30,6 +31,19 @@ public class UnclockKey : MonoBehaviour
     private void OnDisable()
     {
         PlayerTest.OnKeyUsed -= HandleKeyUsed;
+    }
+
+    private void RefreshPlayerReference()
+    {
+        PlayerTest playerTest = FindObjectOfType<PlayerTest>();
+        if (playerTest != null)
+        {
+            player = playerTest.GetComponent<Transform>();
+        }
+        else
+        {
+            player = null;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -86,6 +100,12 @@ public class UnclockKey : MonoBehaviour
 
     void LateUpdate()
     {
+        // Refresh player reference if it's null (after scene transition)
+        if (player == null && canfollowPlayer)
+        {
+            RefreshPlayerReference();
+        }
+
         if(canfollowPlayer && player != null && !keyConsumed)
         {
             // target follow position (slightly behind player)

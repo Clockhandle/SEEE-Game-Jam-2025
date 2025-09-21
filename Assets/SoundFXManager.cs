@@ -18,65 +18,89 @@ public class SoundFXManage : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-   
     }
 
     private void Start()
     {
-
         DeathObj.OnDeath += DeathObj_OnDeath;
         UnlockDoorBomb.OnBombExplode += UnlockDoorBomb_OnBombExplode;
         UnlockDoorBomb.OnGetUnlockBomb += UnlockDoorBomb_OnGetUnlockBomb;
         UnclockKey.OnGetUnlockkey += UnclockKey_OnGetUnlockkey;
         UnlockedDoorFlash.OnDoorUnlocked += UnlockedDoorFlash_OnDoorUnlocked;
-        WinFlagGoal.instance.OnTriggerWinFlag += WinFlagGoal_OnTriggerWinFlag;
-
-       
-
-        //SElfExplode
-
-        //closingGate
-
-
+        
+        if (WinFlagGoal.instance != null)
+        {
+            WinFlagGoal.instance.OnTriggerWinFlag += WinFlagGoal_OnTriggerWinFlag;
+        }
     }
 
+    private void OnDestroy()
+    {
+        // Unsubscribe from all events to prevent MissingReferenceException
+        DeathObj.OnDeath -= DeathObj_OnDeath;
+        UnlockDoorBomb.OnBombExplode -= UnlockDoorBomb_OnBombExplode;
+        UnlockDoorBomb.OnGetUnlockBomb -= UnlockDoorBomb_OnGetUnlockBomb;
+        UnclockKey.OnGetUnlockkey -= UnclockKey_OnGetUnlockkey;
+        UnlockedDoorFlash.OnDoorUnlocked -= UnlockedDoorFlash_OnDoorUnlocked;
+        
+        if (WinFlagGoal.instance != null)
+        {
+            WinFlagGoal.instance.OnTriggerWinFlag -= WinFlagGoal_OnTriggerWinFlag;
+        }
+    }
 
     private void DeathObj_OnDeath(object sender, System.EventArgs e)
     {
         DeathObj deathObj = sender as DeathObj;
-        PlaySound(audioClipData.death, deathObj.transform.position);
+        if (deathObj != null)
+        {
+            PlaySound(audioClipData.death, deathObj.transform.position);
+        }
     }
+    
     private void UnlockDoorBomb_OnBombExplode(object sender, System.EventArgs e)
     {
         UnlockDoorBomb unlockdoorBombm = sender as UnlockDoorBomb;
-        PlaySound(audioClipData.doorExplode, unlockdoorBombm.transform.position);
+        if (unlockdoorBombm != null)
+        {
+            PlaySound(audioClipData.doorExplode, unlockdoorBombm.transform.position);
+        }
     }
 
     private void UnlockDoorBomb_OnGetUnlockBomb(object sender, System.EventArgs e)
     {
         UnlockDoorBomb bomb = sender as UnlockDoorBomb;
-        PlaySound(audioClipData.getObj, bomb.transform.position);
+        if (bomb != null)
+        {
+            PlaySound(audioClipData.getObj, bomb.transform.position);
+        }
     }
 
     private void UnclockKey_OnGetUnlockkey(object sender, System.EventArgs e)
     {
         UnclockKey key = sender as UnclockKey;
-        PlaySound(audioClipData.getObj, key.transform.position);
+        if (key != null)
+        {
+            PlaySound(audioClipData.getObj, key.transform.position);
+        }
     }
 
     private void UnlockedDoorFlash_OnDoorUnlocked(object sender, System.EventArgs e)
     {
         UnlockedDoorFlash doorFlash = sender as UnlockedDoorFlash;
-        PlaySound(audioClipData.doorKeyUnlocked, doorFlash.transform.position);
+        if (doorFlash != null)
+        {
+            PlaySound(audioClipData.doorKeyUnlocked, doorFlash.transform.position);
+        }
     }
 
     private void WinFlagGoal_OnTriggerWinFlag(object sender, System.EventArgs e)
     {
-        WinFlagGoal win = WinFlagGoal.instance;
-        PlaySound(audioClipData.win, win.transform.position);
+        if (WinFlagGoal.instance != null)
+        {
+            PlaySound(audioClipData.win, WinFlagGoal.instance.transform.position);
+        }
     }
-
-  
 
     private void PlaySound(AudioClipData.SoundEffect soundEffect, Vector3 position)
     {
@@ -101,8 +125,6 @@ public class SoundFXManage : MonoBehaviour
         // Destroy the temporary GameObject after the clip finishes
         Destroy(tempAudioSource, audioClip.length);
     }
-
-
 
     public void PlayExplodeSound()
     {

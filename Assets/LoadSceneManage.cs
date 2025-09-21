@@ -14,26 +14,22 @@ public static class LoadSceneManage
         Level2
     }
 
-    private static string targetScene;
-
-  
     public static void LoadLevel(string sceneName)
     {
-        targetScene = sceneName;
-        //SceneManager.LoadScene(targetScene);
-        // Always load the loading screen first
-        SceneManager.LoadScene(SpecialScene.LoadingScene2D.ToString());
+        // Load scene directly without loading screen
+        SceneManager.LoadScene(sceneName);
     }
-
 
     public static void Load(SpecialScene specialScene)
     {
-        targetScene = specialScene.ToString();
-        SceneManager.LoadScene(SpecialScene.LoadingScene2D.ToString());
+        // Load scene directly without loading screen
+        SceneManager.LoadScene(specialScene.ToString());
     }
 
+    // Keep this method for backwards compatibility, but it's no longer needed
     public static void LoaderCallback()
     {
-        SceneManager.LoadScene(targetScene);
+        // This method is no longer used since we load scenes directly
+        Debug.LogWarning("LoaderCallback() is deprecated. Scenes now load directly without loading screen.");
     }
 }

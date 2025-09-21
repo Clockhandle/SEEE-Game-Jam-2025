@@ -32,7 +32,21 @@ public class UnlockDoorBomb : MonoBehaviour
 
     private void OnEnable()
     {
-        player = FindObjectOfType<PlayerTest>().GetComponent<Transform>();
+        // Find player fresh - don't cache across scene transitions
+        RefreshPlayerReference();
+    }
+
+    private void RefreshPlayerReference()
+    {
+        PlayerTest playerTest = FindObjectOfType<PlayerTest>();
+        if (playerTest != null)
+        {
+            player = playerTest.GetComponent<Transform>();
+        }
+        else
+        {
+            player = null;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -74,6 +88,12 @@ public class UnlockDoorBomb : MonoBehaviour
             // Stick to the attached door
             transform.position = attachedDoor.transform.position;
             return;
+        }
+
+        // Refresh player reference if it's null (after scene transition)
+        if (player == null && canfollowPlayer)
+        {
+            RefreshPlayerReference();
         }
 
         if (canfollowPlayer && player != null && !bombConsumed)

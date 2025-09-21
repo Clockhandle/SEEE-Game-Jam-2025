@@ -24,24 +24,16 @@ public class AnimationManager : MonoBehaviour
     {
         Instance = this;
         mainCamera = Camera.main;
-        
-        // Auto-find player if not assigned
-        if (playerTransform == null)
-        {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-                playerTransform = player.transform;
-        }
-        
-        playerInput = FindObjectOfType<PlayerInput>();
-        if (playerInput != null)
-        {
-            OnInitialization();
-        }
     }
 
     void Update()
     {
+        // Refresh player references if they're null (happens after scene changes)
+        if (playerTransform == null || playerInput == null)
+        {
+            RefreshPlayerReferences();
+        }
+
         HandleMovementAnimation();
         
         if (useMouseFlipping)
@@ -50,9 +42,33 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
+    private void RefreshPlayerReferences()
+    {
+        // Find player transform
+        if (playerTransform == null)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+                playerTransform = player.transform;
+        }
+        
+        // Find player input
+        if (playerInput == null)
+        {
+            playerInput = FindObjectOfType<PlayerInput>();
+            if (playerInput != null)
+            {
+                OnInitialization();
+            }
+        }
+    }
+
     private void OnInitialization()
     {
-        moveAction = playerInput.actions["Movement"];
+        if (playerInput != null)
+        {
+            moveAction = playerInput.actions["Movement"];
+        }
     }
 
     private void HandleMovementAnimation()

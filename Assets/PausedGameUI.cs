@@ -6,58 +6,137 @@ using UnityEngine.UI;
 
 public class PausedGameUI : MonoBehaviour
 {
-    //public event EventHandler OnPausedEvent;
-    //public event EventHandler OnUnPausedEvent;
+    [Header("UI References")]
+    [SerializeField] private Button continueButton;
+    [SerializeField] private Button backToSelectorButton;
+    
+    [Header("Optional")]
+    [SerializeField] private GameObject pauseMenuPanel; // Optional container for the pause menu
 
-    //[SerializeField] private Button contitnueButton;
-    //[SerializeField] private Button closeLevelButton;
-    //[SerializeField] private ResultShowUI resultUI;
-    //private void Awake()
-    //{
+    private void Awake()
+    {
+        // Set up button listeners
+        if (continueButton != null)
+        {
+            continueButton.onClick.AddListener(() => {
+                ContinueGame();
+            });
+        }
 
+        if (backToSelectorButton != null)
+        {
+            backToSelectorButton.onClick.AddListener(() => {
+                BackToLevelSelector();
+            });
+        }
+    }
 
-    //    contitnueButton.onClick.AddListener(() => {
-    //        GameManager.Instance.TogglePauseGame();
-    //    });
+    private void Start()
+    {
+        // Hide pause menu at start
+        Hide();
+    }
 
-    //    closeLevelButton.onClick.AddListener(() => {
-    //        Hide();
-    //        resultUI.gameObject.SetActive(true);
-    //        Time.timeScale = 1f;
-    //        //OptionsUI.Instance.Show(Show);
-    //    });
+    /// <summary>
+    /// Call this to show the pause menu (from your pause button)
+    /// </summary>
+    public void ShowPauseMenu()
+    {
+        GameManager.Instance.PauseGame();
+        Show();
+    }
 
-       
-    //}
-    //private void Start()
-    //{
-    //    GameManager.Instance.OnGamePaused += GameManager_OnPausedAction;
-    //    GameManager.Instance.OnGameUnPaused += GameManager_OnUnPausedAction;
+    /// <summary>
+    /// Continue button functionality - resume the game
+    /// </summary>
+    private void ContinueGame()
+    {
+        Hide();
+        GameManager.Instance.UnpauseGame();
+    }
 
-    //    Hide();  //prevent unAble to call event
-    //}
+    /// <summary>
+    /// Back to selector button functionality - unpause and go to level select
+    /// </summary>
+    private void BackToLevelSelector()
+    {
+        Hide();
+        GameManager.Instance.UnpauseGame();
+        
+        // Add flash effect if available
+        if (WhiteFlash.instance != null)
+        {
+            WhiteFlash.instance.ActiveFlashScreen();
+            StartCoroutine(DelayedLevelSelect());
+        }
+        else
+        {
+            LoadLevelSelector();
+        }
+    }
 
-    //private void GameManager_OnPausedAction(object sender, EventArgs e)
-    //{
-    //    Show();
-    //    OnPausedEvent?.Invoke(this, EventArgs.Empty);
-    //}
+    private IEnumerator DelayedLevelSelect()
+    {
+        yield return new WaitForSeconds(1f);
+        LoadLevelSelector();
+    }
 
-    //private void GameManager_OnUnPausedAction(object sender, EventArgs e)
-    //{
-    //    Hide();
-    //    OnUnPausedEvent?.Invoke(this, EventArgs.Empty);
-    //}
+    private void LoadLevelSelector()
+    {
+        LoadSceneManage.Load(LoadSceneManage.SpecialScene.LevelSelect);
+    }
 
-    //private void Show()
-    //{
-    //    gameObject.SetActive(true);
+    /// <summary>
+    /// Show the pause menu UI
+    /// </summary>
+    private void Show()
+    {
+        if (pauseMenuPanel != null)
+        {
+            pauseMenuPanel.SetActive(true);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
 
-    //    //resumeButton.Select();
-    //}
+        // Optional: Select the continue button for controller/keyboard navigation
+        if (continueButton != null)
+        {
+            continueButton.Select();
+        }
+    }
 
-    //private void Hide()
-    //{
-    //    gameObject.SetActive(false);
-    //}
+    /// <summary>
+    /// Hide the pause menu UI
+    /// </summary>
+    private void Hide()
+    {
+        if (pauseMenuPanel != null)
+        {
+            pauseMenuPanel.SetActive(false);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Optional: Handle ESC key input for pause toggle
+    /// </summary>
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (pauseMenuPanel != null ? pauseMenuPanel.activeSelf : gameObject.activeSelf)
+            {
+                ContinueGame(); // If menu is open, continue game
+            }
+            else
+            {
+                ShowPauseMenu(); // If menu is closed, show pause menu
+            }
+        }
+    }
 }
