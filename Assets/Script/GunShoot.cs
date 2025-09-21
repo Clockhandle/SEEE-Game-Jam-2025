@@ -31,6 +31,10 @@ public class GunShoot : MonoBehaviour
     [SerializeField] private bool neutralizeFallingVelocity = true; // Whether to stop downward velocity during rocket jump
     [SerializeField] private float maxAllowedFallSpeed = -5f; // Maximum downward speed allowed during rocket jump (if neutralization is disabled)
 
+    [Header("Lens Distortion Debug")]
+    [SerializeField] private bool enableLensDistortionCorrection = true;
+    [SerializeField] private bool debugLensDistortion = false; // Enable to see debug logs
+
     private Camera mainCamera;
     private Vector3 originalGunScale;
     private PlayerInput playerInput;
@@ -108,25 +112,43 @@ public class GunShoot : MonoBehaviour
         if (mainCamera == null) return;
 
         Vector3 mouseScreenPos = Input.mousePosition;
+        Vector3 originalMousePos = mouseScreenPos; // Store original for debugging
 
         // Get the lens distortion component from the camera or volume
-        var volumeStack = UnityEngine.Rendering.VolumeManager.instance.stack;
-        UnityEngine.Rendering.Universal.LensDistortion lensDistortion = volumeStack.GetComponent<UnityEngine.Rendering.Universal.LensDistortion>();
-
-        if (lensDistortion != null && lensDistortion.active)
+        if (enableLensDistortionCorrection)
         {
-            // Convert screen position to normalized coordinates (0-1)
-            Vector2 normalizedPos = new Vector2(
-                mouseScreenPos.x / Screen.width,
-                mouseScreenPos.y / Screen.height
-            );
+            var volumeStack = UnityEngine.Rendering.VolumeManager.instance.stack;
+            UnityEngine.Rendering.Universal.LensDistortion lensDistortion = volumeStack.GetComponent<UnityEngine.Rendering.Universal.LensDistortion>();
 
-            // Apply inverse distortion correction
-            Vector2 correctedPos = UndistortPosition(normalizedPos, lensDistortion.intensity.value);
+            if (lensDistortion != null && lensDistortion.active)
+            {
+                // Convert screen position to normalized coordinates (0-1)
+                Vector2 normalizedPos = new Vector2(
+                    mouseScreenPos.x / Screen.width,
+                    mouseScreenPos.y / Screen.height
+                );
 
-            // Convert back to screen coordinates
-            mouseScreenPos.x = correctedPos.x * Screen.width;
-            mouseScreenPos.y = correctedPos.y * Screen.height;
+                // Apply inverse distortion correction
+                Vector2 correctedPos = UndistortPosition(normalizedPos, lensDistortion.intensity.value);
+
+                // Convert back to screen coordinates
+                mouseScreenPos.x = correctedPos.x * Screen.width;
+                mouseScreenPos.y = correctedPos.y * Screen.height;
+
+                // Debug logging
+                if (debugLensDistortion)
+                {
+                    Debug.Log($"Lens Distortion - Original: {originalMousePos}, Corrected: {mouseScreenPos}, Intensity: {lensDistortion.intensity.value}");
+                }
+            }
+            else if (debugLensDistortion)
+            {
+                Debug.Log("Lens Distortion component not found or not active");
+            }
+        }
+        else if (debugLensDistortion)
+        {
+            Debug.Log("Lens Distortion correction is disabled");
         }
 
         mouseScreenPos.z = mainCamera.nearClipPlane;
@@ -155,25 +177,23 @@ public class GunShoot : MonoBehaviour
 
     private Vector2 UndistortPosition(Vector2 normalizedPos, float distortionIntensity)
     {
-        // Convert to centered coordinates (-0.5 to 0.5)
+        // Simple approach - just account for the 1.1 scale
         Vector2 centered = normalizedPos - Vector2.one * 0.5f;
         
-        // Calculate distance from center
+        // Account for scale
+        centered /= 1.1f;
+        
         float distance = centered.magnitude;
         
-        // Apply inverse barrel distortion
-        float distortedDistance = distance;
-        if (distance > 0.001f) // Avoid division by zero
+        if (distance > 0.001f)
         {
-            // Inverse of the barrel distortion formula
-            distortedDistance = distance / (1.0f + distortionIntensity * distance * distance);
+            float correctedDistance = distance / (1.0f + distortionIntensity * distance * distance);
+            centered = centered.normalized * correctedDistance;
         }
         
-        // Scale the centered position
-        Vector2 corrected = centered.normalized * distortedDistance;
-        
-        // Convert back to normalized coordinates
-        return corrected + Vector2.one * 0.5f;
+        // Scale back and return
+        centered *= 1.1f;
+        return centered + Vector2.one * 0.5f;
     }
 
     private void HandleShooting()

@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
     [Header("Auto Progression Settings")]
     [SerializeField] private bool autoProgressToNextLevel = true;
     [SerializeField] private float progressionDelay = 2f; // Delay after winning before transitioning
+    
+    // Add safeguard against multiple level completion saves
+    private bool levelCompletionSaved = false;
 
     private void Awake()
     {
@@ -34,6 +37,9 @@ public class GameManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         string sceneName = scene.name;
+        
+        // Reset level completion flag for new scene
+        levelCompletionSaved = false;
         
         // Only set up UnlockLVButton functionality for actual level scenes, not for LevelSelect
         if (IsLevelScene(sceneName))
@@ -70,6 +76,13 @@ public class GameManager : MonoBehaviour
 
     private void OnLevelWin(object sender, EventArgs e)
     {
+        // Prevent multiple level completion processing
+        if (levelCompletionSaved)
+        {
+            Debug.Log("Level completion already processed, ignoring duplicate win event");
+            return;
+        }
+        
         if (autoProgressToNextLevel)
         {
             StartCoroutine(AutoProgressToNextLevel());
@@ -94,12 +107,24 @@ public class GameManager : MonoBehaviour
 
     private void GameManager_OnLevelWin()
     {
+        // Prevent saving progress multiple times for the same level
+        if (levelCompletionSaved)
+        {
+            Debug.Log("Level completion already saved, skipping duplicate save");
+            return;
+        }
+        
         if (SceneManager.GetActiveScene().buildIndex >= PlayerPrefs.GetInt("ReachIndex"))
         {
             PlayerPrefs.SetInt("ReachIndex", SceneManager.GetActiveScene().buildIndex + 1);
             PlayerPrefs.SetInt("unlockedLevel", PlayerPrefs.GetInt("unlockedLevel", 1) + 1);
             PlayerPrefs.Save();
+            levelCompletionSaved = true; // Mark as saved
             Debug.Log($"Progress saved! Unlocked level: {PlayerPrefs.GetInt("unlockedLevel", 1)}");
+        }
+        else
+        {
+            Debug.Log("Level already completed previously, not updating progress");
         }
     }
 

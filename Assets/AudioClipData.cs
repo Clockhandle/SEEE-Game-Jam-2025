@@ -9,7 +9,7 @@ public class AudioClipData : ScriptableObject
     public class SoundEffect
     {
         public AudioClip[] clips;
-        [Range(0f, 2f)]
+        [Range(0f, 3f)]
         public float volume = 1f;
     }
     
