@@ -15,39 +15,39 @@ MonoBehaviour:
   shoot:
     clips:
     - {fileID: 8300000, guid: 45d23402c5792f74ab50d55bef63056c, type: 3}
-    volume: 1
+    volume: 0.6
   shootExplode:
     clips:
     - {fileID: 8300000, guid: 9db3750f924565342baf754592b9c7c6, type: 3}
-    volume: 0.8
+    volume: 0.6
   selfExplode:
     clips:
     - {fileID: 8300000, guid: 9db3750f924565342baf754592b9c7c6, type: 3}
-    volume: 1
+    volume: 0.7
   death:
     clips:
     - {fileID: 8300000, guid: ee583a5ba20d4404dbb26e6ad2c93bfd, type: 3}
-    volume: 1
+    volume: 0.8
   win:
     clips:
-    - {fileID: 8300000, guid: 30eeee24dd509654183af3963b44d3a7, type: 3}
-    volume: 1
+    - {fileID: 8300000, guid: e7571564ff2b0a146a78ff72f70b7ce9, type: 3}
+    volume: 2
   getObj:
     clips:
     - {fileID: 8300000, guid: aafbae106e1a42f4d9a7505740b7cd3d, type: 3}
-    volume: 1
+    volume: 0.8
   buttonClick:
     clips:
     - {fileID: 8300000, guid: f2b685315c910dc449471b2bc3cad143, type: 3}
-    volume: 1
+    volume: 0.8
   doorExplode:
     clips:
     - {fileID: 8300000, guid: 6fccadbdc2530324aa958fd49cfdd02d, type: 3}
-    volume: 1
+    volume: 0.8
   doorKeyUnlocked:
     clips:
     - {fileID: 8300000, guid: 5cb5f4aed8fac524e8a70a2aab061a73, type: 3}
-    volume: 1
+    volume: 0.8
   closingGate:
     clips: []
     volume: 1

@@ -324,6 +324,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unlockButton: {fileID: 0}
+  autoProgressToNextLevel: 1
+  progressionDelay: 2
 --- !u!4 &243136707
 Transform:
   m_ObjectHideFlags: 0
@@ -499,6 +501,52 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 036bff9063646034aa42e56d511be1bf, type: 3}
+--- !u!1 &554020644
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 554020645}
+  - component: {fileID: 554020646}
+  m_Layer: 0
+  m_Name: BgmManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &554020645
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 554020644}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.3675127, y: -0.93361264, z: -0.57640207}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &554020646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 554020644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85500419b215d24c8b405b98935b96b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicData: {fileID: 11400000, guid: 8ca94849ba0d9ea44b11b02ae3d76d49, type: 2}
+  masterVolume: 1
 --- !u!1 &765985219
 GameObject:
   m_ObjectHideFlags: 0
@@ -1760,3 +1808,4 @@ SceneRoots:
   - {fileID: 1695621091}
   - {fileID: 243136707}
   - {fileID: 407736068}
+  - {fileID: 554020645}
